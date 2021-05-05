@@ -70,17 +70,18 @@ namespace NSimpleOLAP.Data
 
     private void HandleLevels(AbsRowData rowdata, SourceMappingsElement item, List<KeyValuePair<T, T>> retlist)
     {
-      for (var i = 0; i < item.Labels.Length; i++)
-      {
-        var dimension = _schema.Dimensions[item.Labels[i]];
 
-        if (dimension.TypeOf == DimensionType.Date)
+      var firstDimension = _schema.Dimensions[item.Labels[0]];
+
+      if (firstDimension.TypeOf == DimensionType.Date)
+      {
+        for (var i = 0; i < item.Labels.Length; i++)
         {
-          var dtDimension = (DimensionDateTime<T>)dimension;
+          var dtDimension = (DimensionDateTime<T>)_schema.Dimensions[item.Labels[i]];
           var value = ((DateTime?)rowdata[item.Field]).Value;
           T segment = DateTimeMemberGenerator.TransformToDateId<T>(value, dtDimension.DateLevel);
 
-          KeyValuePair<T, T> pair = new KeyValuePair<T, T>(dimension.ID, segment);
+          KeyValuePair<T, T> pair = new KeyValuePair<T, T>(dtDimension.ID, segment);
           retlist.Add(pair);
 
           if (!dtDimension.Members.ContainsKey(segment))
@@ -90,6 +91,26 @@ namespace NSimpleOLAP.Data
               ID = segment,
               Name = DateTimeMemberGenerator.GetLevelName(value, dtDimension.DateLevel)
             });
+          }
+        }
+      }
+      else if (firstDimension.TypeOf == DimensionType.Levels)
+      {
+        T segment = (T)Convert.ChangeType(rowdata[item.Field], typeof(T));
+        var lvDimension = (DimensionLevel<T>)firstDimension;
+
+        if (firstDimension.Members.ContainsKey(segment))
+        {
+          var member = (MemberLevel<T>) lvDimension.Members[segment];
+          KeyValuePair<T, T> pair = new KeyValuePair<T, T>(lvDimension.ID, segment);
+          retlist.Add(pair);
+
+          for (var i=1; i < item.Labels.Length; i++)
+          {
+            var xdimension = (DimensionLevel<T>)_schema.Dimensions[item.Labels[i]];
+            var xpair = new KeyValuePair<T, T>(xdimension.ID, member.Levels[item.Labels[i]]);
+
+            retlist.Add(xpair);
           }
         }
       }

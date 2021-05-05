@@ -66,6 +66,7 @@
     <Compile Include="CubeExpressionMetricsSetupTests.cs" />
     <Compile Include="CubeInitializationTests.cs" />
     <Compile Include="CubeInitializationWithDateTests.cs" />
+    <Compile Include="CubeInitializationWithLevelDimensions.cs" />
     <Compile Include="CubeSourcesFixture.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

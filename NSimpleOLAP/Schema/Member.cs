@@ -1,6 +1,7 @@
 ﻿using NSimpleOLAP.Common;
 using NSimpleOLAP.Schema.Interfaces;
 using System;
+using System.Collections.Generic;
 
 namespace NSimpleOLAP.Schema
 {
@@ -36,5 +37,16 @@ namespace NSimpleOLAP.Schema
       get;
       set;
     }
+  }
+
+  public class MemberLevel<T> : Member<T>
+    where T : struct, IComparable
+  {
+    public MemberLevel()
+    {
+      Levels = new Dictionary<string, T>();
+    }
+
+    public IDictionary<string, T> Levels { get; }
   }
 }

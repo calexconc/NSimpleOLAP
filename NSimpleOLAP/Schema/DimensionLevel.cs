@@ -19,11 +19,12 @@ namespace NSimpleOLAP.Schema
   {
     private int _level;
 
-    public DimensionLevel(DimensionConfig dimconfig, int levelIndex)
+    public DimensionLevel(DimensionConfig dimconfig, int levelIndex, IDataSource datasource)
     {
-      typeOf = DimensionType.Date;
+      typeOf = DimensionType.Levels;
       this.Config = dimconfig;
       _level = levelIndex;
+      dataSource = datasource;
       LevelDimensions = new List<DimensionLevel<T>>();
     }
 
@@ -43,11 +44,19 @@ namespace NSimpleOLAP.Schema
       {
         while (reader.Next())
         {
-          var member = new Member<T>()
+          var member = new MemberLevel<T>()
           {
             ID = (T)reader.Current[this.Config.ValueFieldName],
             Name = reader.Current[this.Config.DesFieldName].ToString()
           };
+
+          foreach (var dim in LevelDimensions)
+          {
+            var column = reader.Current[dim.Config.DesFieldName].ToString();
+            var value = (T)reader.Current[dim.Config.ValueFieldName];
+
+            member.Levels.Add(dim.Name, value);
+          }
 
           if (!Members.ContainsKey(member.ID))
           {
@@ -59,7 +68,7 @@ namespace NSimpleOLAP.Schema
 
     internal override void SetMembersStorage(IMemberStorage<T, Member<T>> storage)
     {
-      _members = new MemberCollection<T>(storage); //todo change this
+      members = new MemberCollection<T>(storage); //todo change this
     }
   }
 }

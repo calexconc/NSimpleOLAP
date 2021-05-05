@@ -17,7 +17,9 @@ namespace NSimpleOLAP.Schema
   {
     protected DimensionType typeOf;
 
-    protected MemberCollection<T> _members;
+    protected MemberCollection<T> members;
+
+    protected IDataSource dataSource;
 
     public Dimension()
     {
@@ -27,7 +29,7 @@ namespace NSimpleOLAP.Schema
     public Dimension(DimensionConfig dimconfig, IDataSource datasource):this()
     {
       this.Config = dimconfig;
-      this.DataSource = datasource;
+      dataSource = datasource;
     }
 
     public string Name
@@ -51,7 +53,7 @@ namespace NSimpleOLAP.Schema
 
     public MemberCollection<T> Members
     {
-      get { return _members; }
+      get { return members; }
     }
 
     public DimensionConfig Config
@@ -62,8 +64,10 @@ namespace NSimpleOLAP.Schema
 
     public IDataSource DataSource
     {
-      get;
-      private set;
+      get 
+      {
+        return dataSource;
+      }
     }
 
     public virtual bool HasLevels { get { return false; } }
@@ -94,7 +98,7 @@ namespace NSimpleOLAP.Schema
 
     internal virtual void SetMembersStorage(IMemberStorage<T, Member<T>> storage)
     {
-      _members = new MemberCollection<T>(storage);
+      members = new MemberCollection<T>(storage);
     }
 
     #endregion

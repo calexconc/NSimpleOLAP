@@ -53,7 +53,7 @@ namespace NSimpleOLAP.Schema
 
     internal override void SetMembersStorage(IMemberStorage<T, Member<T>> storage)
     {
-      _members = new MemberCollection<T>(storage); //todo change this
+      members = new MemberCollection<T>(storage); //todo change this
     }
 
     private IEnumerable<Tuple<T, string>> PrePopulate()

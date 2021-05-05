@@ -81,9 +81,11 @@ namespace NSimpleOLAP.Configuration.Fluent
             levels.Add(level, config.Name);
           }
         }
-        else if (config.DimensionType == Common.DimensionType.Levels
+        
+        if (config.DimensionType == Common.DimensionType.Numeric
           && levels.ContainsKey(config.Name))
         {
+          config.DimensionType = Common.DimensionType.Levels;
           config.ParentDimension = levels[config.Name];
         }
 

@@ -123,7 +123,7 @@ namespace NSimpleOLAP.Schema
         {          
           if (string.IsNullOrEmpty(item.ParentDimension))
           {
-            var ldim = new DimensionLevel<T>(item, 0);
+            var ldim = new DimensionLevel<T>(item, 0, _datasources[item.Source]) { Name = item.Name };
 
             levels.Add(item.Name, item.LevelLabels);
             this.Dimensions.Add(ldim);
@@ -132,11 +132,10 @@ namespace NSimpleOLAP.Schema
           {
             var dLevels = levels[item.ParentDimension];
             var index = Array.FindIndex(dLevels, x => x.Equals(item.Name));
-            var ldim = new DimensionLevel<T>(item, index);
+            var ldim = new DimensionLevel<T>(item, index + 1, _datasources[item.Source]) { Name = item.Name };
             var parentDim =(DimensionLevel<T>) this.Dimensions[item.ParentDimension];
 
             parentDim.LevelDimensions.Add(ldim);
-            ldim.LevelDimensions.Add(parentDim);
             this.Dimensions.Add(ldim);
           }
         }
@@ -151,7 +150,8 @@ namespace NSimpleOLAP.Schema
           foreach (var child2 in parentDim.LevelDimensions)
           {
             if (!child.ID.Equals(child2.ID)
-              && !child2.ID.Equals(parentDim))
+              && !child2.ID.Equals(parentDim)
+              && child.LevelPosition <= child2.LevelPosition)
               child.LevelDimensions.Add(child2);
           }
         }
