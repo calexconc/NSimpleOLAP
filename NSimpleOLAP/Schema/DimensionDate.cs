@@ -11,28 +11,28 @@ using NSimpleOLAP.Storage.Interfaces;
 
 namespace NSimpleOLAP.Schema
 {
-  public class DimensionDateTime<T> : Dimension<T>
+  public class DimensionDate<T> : Dimension<T>
     where T : struct, IComparable
   {
     private int _level;
    // private MemberDateTimeCollection<T> _members;
 
-    public DimensionDateTime(DimensionConfig dimconfig, DateTimeLevels level, int levelIndex)
+    public DimensionDate(DimensionConfig dimconfig, DateLevels level, int levelIndex)
     {
       typeOf = DimensionType.Date;
       this.Config = dimconfig;
       DateLevel = level;
       _level = levelIndex;
-      LevelDimensions = new List<DimensionDateTime<T>>();
+      LevelDimensions = new List<DimensionDate<T>>();
     }
 
-    public DateTimeLevels DateLevel { get; private set; }
+    public DateLevels DateLevel { get; private set; }
 
     public new int LevelPosition { get { return _level; } }
 
     public new bool HasLevels { get { return LevelDimensions.Count > 0; } }
 
-    public IList<DimensionDateTime<T>> LevelDimensions
+    public IList<DimensionDate<T>> LevelDimensions
     {
       get;
       private set;
@@ -62,16 +62,16 @@ namespace NSimpleOLAP.Schema
 
       switch (DateLevel)
       {
-        case DateTimeLevels.YEAR:
+        case DateLevels.YEAR:
           return new Tuple<T, string>[] { 
             new Tuple<T, string>(DateTimeMemberGenerator.TransformToDateId<T>(tempDate, DateLevel), 
             DateTimeMemberGenerator.GetLevelName(tempDate, DateLevel)) 
           };
-        case DateTimeLevels.MONTH_WITH_YEAR:
+        case DateLevels.MONTH_WITH_YEAR:
           return DateTimeMemberGenerator.GetAllMonthsInYear<T>(tempDate);
-        case DateTimeLevels.MONTH:
+        case DateLevels.MONTH:
           return DateTimeMemberGenerator.GetAllMonthsInYear<T>();
-        case DateTimeLevels.DAY:
+        case DateLevels.DAY:
           return DateTimeMemberGenerator.GetAllDays<T>();
         default:
           return new Tuple<T, string>[] { };

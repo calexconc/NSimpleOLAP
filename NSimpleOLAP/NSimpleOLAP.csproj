@@ -209,8 +209,9 @@
     <Compile Include="Schema\DataSchema.cs" />
     <Compile Include="Schema\Dimension.cs" />
     <Compile Include="Schema\DimensionCollection.cs" />
-    <Compile Include="Schema\DimensionDateTime.cs" />
+    <Compile Include="Schema\DimensionDate.cs" />
     <Compile Include="Schema\DimensionLevel.cs" />
+    <Compile Include="Schema\DimensionTime.cs" />
     <Compile Include="Schema\Interfaces\IDataItem.cs" />
     <Compile Include="Schema\Interfaces\IDataItemCollection.cs" />
     <Compile Include="Schema\Interfaces\IDimension.cs" />

@@ -66,7 +66,7 @@ namespace NSimpleOLAP.Configuration.Fluent
       return this;
     }
 
-    public DimensionBuilder SetToDateSource(params DateTimeLevels[] levels)
+    public DimensionBuilder SetToDateSource(params DateLevels[] levels)
     {
       _element.DimensionType = DimensionType.Date;
       _element.Levels = levels.ToList();

@@ -106,7 +106,7 @@ namespace ExampleApp
           .AddDimension("date", dimbuild =>
           {
             dimbuild
-            .SetToDateSource(DateTimeLevels.YEAR, DateTimeLevels.MONTH, DateTimeLevels.DAY)
+            .SetToDateSource(DateLevels.YEAR, DateLevels.MONTH, DateLevels.DAY)
             .SetLevelDimensions("Year", "Month", "Day");
           })
           .AddMeasure("spent", mesbuild =>

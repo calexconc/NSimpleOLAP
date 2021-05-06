@@ -12,14 +12,14 @@ namespace NSimpleOLAP.Common.Converters
     public override object ConvertFrom(ITypeDescriptorContext ctx, CultureInfo culture, object value)
     {
       if (value == null)
-        return new List<DateTimeLevels>();
+        return new List<DateLevels>();
 
       var str = (string)value;
-      var list = new List<DateTimeLevels>();
+      var list = new List<DateLevels>();
 
       foreach (var item in str.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
       {
-        DateTimeLevels result;
+        DateLevels result;
 
         if (!Enum.TryParse(item.ToUpper().Trim(), true, out result))
         {
@@ -34,9 +34,9 @@ namespace NSimpleOLAP.Common.Converters
 
     public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
     {
-      if (value is List<DateTimeLevels>)
+      if (value is List<DateLevels>)
       {
-        var arr = (List<DateTimeLevels>)value;
+        var arr = (List<DateLevels>)value;
 
         return string.Join(",", arr.Select(x => x.ToString()));
       }

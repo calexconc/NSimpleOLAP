@@ -81,9 +81,9 @@ namespace NSimpleOLAP.Configuration
     /// </summary>
     [ConfigurationProperty("levels", IsRequired = false)]
     [TypeConverter(typeof(DateLevelListFieldConverter))]
-    public List<DateTimeLevels> Levels
+    public List<DateLevels> Levels
     {
-      get { return (List<DateTimeLevels>)this["levels"]; }
+      get { return (List<DateLevels>)this["levels"]; }
       set { this["levels"] = value; }
     }
 

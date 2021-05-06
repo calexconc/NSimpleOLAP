@@ -77,7 +77,7 @@ namespace NSimpleOLAP.Data
       {
         for (var i = 0; i < item.Labels.Length; i++)
         {
-          var dtDimension = (DimensionDateTime<T>)_schema.Dimensions[item.Labels[i]];
+          var dtDimension = (DimensionDate<T>)_schema.Dimensions[item.Labels[i]];
           var value = ((DateTime?)rowdata[item.Field]).Value;
           T segment = DateTimeMemberGenerator.TransformToDateId<T>(value, dtDimension.DateLevel);
 

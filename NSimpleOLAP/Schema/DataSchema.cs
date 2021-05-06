@@ -98,11 +98,11 @@ namespace NSimpleOLAP.Schema
         }
         if (item.DimensionType == DimensionType.Date)
         {
-          var dtLevels = new List<DimensionDateTime<T>>();
+          var dtLevels = new List<DimensionDate<T>>();
 
           for (var i = 0; i < item.Levels.Count; i++)
           {
-            var ndim = new DimensionDateTime<T>(item, item.Levels[i], i)
+            var ndim = new DimensionDate<T>(item, item.Levels[i], i)
             { 
               Name = item.LevelLabels[i],
             };

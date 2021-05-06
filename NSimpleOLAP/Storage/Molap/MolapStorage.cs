@@ -54,7 +54,7 @@ namespace NSimpleOLAP.Storage.Molap
           if (dimension.TypeOf == DimensionType.Date)
           {
             //todo change this
-            ((DimensionDateTime<T>)dimension).SetMembersStorage(new DimensionMembersCollection());
+            ((DimensionDate<T>)dimension).SetMembersStorage(new DimensionMembersCollection());
           }
           else if (dimension.TypeOf == DimensionType.Levels)
           {

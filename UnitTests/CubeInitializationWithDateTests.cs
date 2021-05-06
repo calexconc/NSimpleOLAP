@@ -54,7 +54,7 @@ namespace UnitTests
           .AddDimension("date", dimbuild =>
           {
             dimbuild
-            .SetToDateSource(DateTimeLevels.YEAR, DateTimeLevels.MONTH_WITH_YEAR, DateTimeLevels.MONTH, DateTimeLevels.DAY)
+            .SetToDateSource(DateLevels.YEAR, DateLevels.MONTH_WITH_YEAR, DateLevels.MONTH, DateLevels.DAY)
             .SetLevelDimensions("Year", "Year Month", "Month", "Day");
           });
         });
@@ -118,7 +118,7 @@ namespace UnitTests
           .AddDimension("date", dimbuild =>
           {
             dimbuild
-            .SetToDateSource(DateTimeLevels.YEAR, DateTimeLevels.MONTH_WITH_YEAR, DateTimeLevels.MONTH, DateTimeLevels.DAY)
+            .SetToDateSource(DateLevels.YEAR, DateLevels.MONTH_WITH_YEAR, DateLevels.MONTH, DateLevels.DAY)
             .SetLevelDimensions("Year", "Year Month", "Month", "Day");
           });
         });
