@@ -73,45 +73,81 @@ namespace NSimpleOLAP.Data
 
       var firstDimension = _schema.Dimensions[item.Labels[0]];
 
-      if (firstDimension.TypeOf == DimensionType.Date)
+      switch (firstDimension.TypeOf)
       {
-        for (var i = 0; i < item.Labels.Length; i++)
+        case DimensionType.Date:
+          HandleDateLevels(rowdata, item, retlist);
+          break;
+        case DimensionType.Time:
+          HandleTimeLevels(rowdata, item, retlist);
+          break;
+        case DimensionType.Levels:
+          HandleNumericLevels(firstDimension, rowdata, item, retlist);
+          break;
+      }
+    }
+
+    private void HandleDateLevels(AbsRowData rowdata, SourceMappingsElement item, List<KeyValuePair<T, T>> retlist)
+    {
+      for (var i = 0; i < item.Labels.Length; i++)
+      {
+        var dtDimension = (DimensionDate<T>)_schema.Dimensions[item.Labels[i]];
+        var value = ((DateTime?)rowdata[item.Field]).Value;
+        T segment = DateTimeMemberGenerator.TransformToDateId<T>(value, dtDimension.DateLevel);
+
+        KeyValuePair<T, T> pair = new KeyValuePair<T, T>(dtDimension.ID, segment);
+        retlist.Add(pair);
+
+        if (!dtDimension.Members.ContainsKey(segment))
         {
-          var dtDimension = (DimensionDate<T>)_schema.Dimensions[item.Labels[i]];
-          var value = ((DateTime?)rowdata[item.Field]).Value;
-          T segment = DateTimeMemberGenerator.TransformToDateId<T>(value, dtDimension.DateLevel);
-
-          KeyValuePair<T, T> pair = new KeyValuePair<T, T>(dtDimension.ID, segment);
-          retlist.Add(pair);
-
-          if (!dtDimension.Members.ContainsKey(segment))
+          dtDimension.Members.Add(new Member<T>
           {
-            dtDimension.Members.Add(new Member<T>
-            {
-              ID = segment,
-              Name = DateTimeMemberGenerator.GetLevelName(value, dtDimension.DateLevel)
-            });
-          }
+            ID = segment,
+            Name = DateTimeMemberGenerator.GetLevelName(value, dtDimension.DateLevel)
+          });
         }
       }
-      else if (firstDimension.TypeOf == DimensionType.Levels)
+    }
+
+    private void HandleTimeLevels(AbsRowData rowdata, SourceMappingsElement item, List<KeyValuePair<T, T>> retlist)
+    {
+      for (var i = 0; i < item.Labels.Length; i++)
       {
-        T segment = (T)Convert.ChangeType(rowdata[item.Field], typeof(T));
-        var lvDimension = (DimensionLevel<T>)firstDimension;
+        var dtDimension = (DimensionTime<T>)_schema.Dimensions[item.Labels[i]];
+        var value = ((TimeSpan?)rowdata[item.Field]).Value;
+        T segment = DateTimeMemberGenerator.TransformToTimeId<T>(value, dtDimension.TimeLevel);
 
-        if (firstDimension.Members.ContainsKey(segment))
+        KeyValuePair<T, T> pair = new KeyValuePair<T, T>(dtDimension.ID, segment);
+        retlist.Add(pair);
+
+        if (!dtDimension.Members.ContainsKey(segment))
         {
-          var member = (MemberLevel<T>) lvDimension.Members[segment];
-          KeyValuePair<T, T> pair = new KeyValuePair<T, T>(lvDimension.ID, segment);
-          retlist.Add(pair);
-
-          for (var i=1; i < item.Labels.Length; i++)
+          dtDimension.Members.Add(new Member<T>
           {
-            var xdimension = (DimensionLevel<T>)_schema.Dimensions[item.Labels[i]];
-            var xpair = new KeyValuePair<T, T>(xdimension.ID, member.Levels[item.Labels[i]]);
+            ID = segment,
+            Name = DateTimeMemberGenerator.GetLevelName(value, dtDimension.TimeLevel)
+          });
+        }
+      }
+    }
 
-            retlist.Add(xpair);
-          }
+    private void HandleNumericLevels(Dimension<T> firstDimension, AbsRowData rowdata, SourceMappingsElement item, List<KeyValuePair<T, T>> retlist)
+    {
+      T segment = (T)Convert.ChangeType(rowdata[item.Field], typeof(T));
+      var lvDimension = (DimensionLevel<T>)firstDimension;
+
+      if (firstDimension.Members.ContainsKey(segment))
+      {
+        var member = (MemberLevel<T>)lvDimension.Members[segment];
+        KeyValuePair<T, T> pair = new KeyValuePair<T, T>(lvDimension.ID, segment);
+        retlist.Add(pair);
+
+        for (var i = 1; i < item.Labels.Length; i++)
+        {
+          var xdimension = (DimensionLevel<T>)_schema.Dimensions[item.Labels[i]];
+          var xpair = new KeyValuePair<T, T>(xdimension.ID, member.Levels[item.Labels[i]]);
+
+          retlist.Add(xpair);
         }
       }
     }

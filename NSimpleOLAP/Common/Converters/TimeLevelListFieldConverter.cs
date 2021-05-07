@@ -7,19 +7,19 @@ using System.Linq;
 
 namespace NSimpleOLAP.Common.Converters
 {
-  public class DateLevelListFieldConverter : ConfigurationConverterBase
+  public class TimeLevelListFieldConverter : ConfigurationConverterBase
   {
     public override object ConvertFrom(ITypeDescriptorContext ctx, CultureInfo culture, object value)
     {
       if (value == null)
-        return new List<DateLevels>();
+        return new List<TimeLevels>();
 
       var str = (string)value;
-      var list = new List<DateLevels>();
+      var list = new List<TimeLevels>();
 
       foreach (var item in str.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
       {
-        DateLevels result;
+        TimeLevels result;
 
         if (!Enum.TryParse(item.ToUpper().Trim(), true, out result))
         {
@@ -34,9 +34,9 @@ namespace NSimpleOLAP.Common.Converters
 
     public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
     {
-      if (value is List<DateLevels>)
+      if (value is List<TimeLevels>)
       {
-        var arr = (List<DateLevels>)value;
+        var arr = (List<TimeLevels>)value;
 
         return string.Join(",", arr.Select(x => x.ToString()));
       }

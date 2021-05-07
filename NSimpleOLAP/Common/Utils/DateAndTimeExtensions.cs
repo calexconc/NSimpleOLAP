@@ -19,5 +19,16 @@ namespace NSimpleOLAP.Common.Utils
 
       return null;
     }
+
+    public static TimeSpan? GetTimeSpan(this string value, string format)
+    {
+      var provider = CultureInfo.InvariantCulture;
+      TimeSpan result;
+
+      if (TimeSpan.TryParseExact(value, format, provider,TimeSpanStyles.None, out result))
+        return result;
+
+      return null;
+    }
   }
 }

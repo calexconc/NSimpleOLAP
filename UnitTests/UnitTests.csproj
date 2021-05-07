@@ -65,6 +65,7 @@
     <Compile Include="CubeExpressionMetricsExecutionTests.cs" />
     <Compile Include="CubeExpressionMetricsSetupTests.cs" />
     <Compile Include="CubeInitializationTests.cs" />
+    <Compile Include="CubeInitializationWithTimeTests.cs" />
     <Compile Include="CubeInitializationWithDateTests.cs" />
     <Compile Include="CubeInitializationWithLevelDimensions.cs" />
     <Compile Include="CubeSourcesFixture.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryBuildTests.cs" />
     <Compile Include="QueryExecutionTests.cs" />
+    <Compile Include="QueryExecutionWithTimeDimensionsTests.cs" />
     <Compile Include="QueryExecutionWithLevelDimensionsTests.cs" />
     <Compile Include="QueryExecutionWithDateDimensionsTests.cs" />
     <Compile Include="ReadDataSourceTests.cs" />
@@ -87,6 +89,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestData\dimension3.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\tableWithTime.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestData\tableWithDate.csv">

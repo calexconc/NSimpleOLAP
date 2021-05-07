@@ -91,53 +91,20 @@ namespace NSimpleOLAP.Schema
           && !_datasources.ContainsKey(item.Source))
           throw new Exception($"Datasource {item.Source} does not exist in sources definitions.");
 
-        if (item.DimensionType == DimensionType.Numeric)
+        switch (item.DimensionType)
         {
-          Dimension<T> ndim = new Dimension<T>(item, _datasources[item.Source]) { Name = item.Name };
-          this.Dimensions.Add(ndim);
-        }
-        if (item.DimensionType == DimensionType.Date)
-        {
-          var dtLevels = new List<DimensionDate<T>>();
-
-          for (var i = 0; i < item.Levels.Count; i++)
-          {
-            var ndim = new DimensionDate<T>(item, item.Levels[i], i)
-            { 
-              Name = item.LevelLabels[i],
-            };
-            dtLevels.Add(ndim);
-            this.Dimensions.Add(ndim);
-          }
-
-          foreach (var dtItem in dtLevels)
-          {
-            var query = dtLevels
-              .Where(x => x.LevelPosition != dtItem.LevelPosition)
-              .ToList();
-
-            query.ForEach(x => dtItem.LevelDimensions.Add(x));
-          }
-        }
-        if (item.DimensionType == DimensionType.Levels)
-        {          
-          if (string.IsNullOrEmpty(item.ParentDimension))
-          {
-            var ldim = new DimensionLevel<T>(item, 0, _datasources[item.Source]) { Name = item.Name };
-
-            levels.Add(item.Name, item.LevelLabels);
-            this.Dimensions.Add(ldim);
-          }
-          else
-          {
-            var dLevels = levels[item.ParentDimension];
-            var index = Array.FindIndex(dLevels, x => x.Equals(item.Name));
-            var ldim = new DimensionLevel<T>(item, index + 1, _datasources[item.Source]) { Name = item.Name };
-            var parentDim =(DimensionLevel<T>) this.Dimensions[item.ParentDimension];
-
-            parentDim.LevelDimensions.Add(ldim);
-            this.Dimensions.Add(ldim);
-          }
+          case DimensionType.Numeric:
+            HandleInitNumericDimension(item);
+            break;
+          case DimensionType.Date:
+            HandleInitDateDimension(item);
+            break;
+          case DimensionType.Time:
+            HandleInitTimeDimension(item);
+            break;
+          case DimensionType.Levels:
+            HandleInitLevelDimension(item, levels);
+            break;
         }
       }
 
@@ -155,6 +122,81 @@ namespace NSimpleOLAP.Schema
               child.LevelDimensions.Add(child2);
           }
         }
+      }
+    }
+
+    private void HandleInitNumericDimension(DimensionConfig item)
+    {
+      Dimension<T> ndim = new Dimension<T>(item, _datasources[item.Source]) { Name = item.Name };
+      this.Dimensions.Add(ndim);
+    }
+
+    private void HandleInitDateDimension(DimensionConfig item)
+    {
+      var dtLevels = new List<DimensionDate<T>>();
+
+      for (var i = 0; i < item.DateLevels.Count; i++)
+      {
+        var ndim = new DimensionDate<T>(item, item.DateLevels[i], i)
+        {
+          Name = item.LevelLabels[i],
+        };
+        dtLevels.Add(ndim);
+        this.Dimensions.Add(ndim);
+      }
+
+      foreach (var dtItem in dtLevels)
+      {
+        var query = dtLevels
+          .Where(x => x.LevelPosition != dtItem.LevelPosition)
+          .ToList();
+
+        query.ForEach(x => dtItem.LevelDimensions.Add(x));
+      }
+    }
+
+    private void HandleInitTimeDimension(DimensionConfig item)
+    {
+      var dtLevels = new List<DimensionTime<T>>();
+
+      for (var i = 0; i < item.TimeLevels.Count; i++)
+      {
+        var ndim = new DimensionTime<T>(item, item.TimeLevels[i], i)
+        {
+          Name = item.LevelLabels[i],
+        };
+        dtLevels.Add(ndim);
+        this.Dimensions.Add(ndim);
+      }
+
+      foreach (var dtItem in dtLevels)
+      {
+        var query = dtLevels
+          .Where(x => x.LevelPosition != dtItem.LevelPosition)
+          .ToList();
+
+        query.ForEach(x => dtItem.LevelDimensions.Add(x));
+      }
+    }
+
+    private void HandleInitLevelDimension(DimensionConfig item, Dictionary<string, string[]> levels)
+    {
+      if (string.IsNullOrEmpty(item.ParentDimension))
+      {
+        var ldim = new DimensionLevel<T>(item, 0, _datasources[item.Source]) { Name = item.Name };
+
+        levels.Add(item.Name, item.LevelLabels);
+        this.Dimensions.Add(ldim);
+      }
+      else
+      {
+        var dLevels = levels[item.ParentDimension];
+        var index = Array.FindIndex(dLevels, x => x.Equals(item.Name));
+        var ldim = new DimensionLevel<T>(item, index + 1, _datasources[item.Source]) { Name = item.Name };
+        var parentDim = (DimensionLevel<T>)this.Dimensions[item.ParentDimension];
+
+        parentDim.LevelDimensions.Add(ldim);
+        this.Dimensions.Add(ldim);
       }
     }
 

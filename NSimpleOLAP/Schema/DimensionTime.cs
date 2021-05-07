@@ -19,11 +19,11 @@ namespace NSimpleOLAP.Schema
 
     public DimensionTime(DimensionConfig dimconfig, TimeLevels level, int levelIndex)
     {
-      typeOf = DimensionType.DayHour;
+      typeOf = DimensionType.Time;
       this.Config = dimconfig;
       TimeLevel = level;
       _level = levelIndex;
-      LevelDimensions = new List<DimensionDate<T>>();
+      LevelDimensions = new List<DimensionTime<T>>();
     }
 
     public TimeLevels TimeLevel { get; private set; }
@@ -32,7 +32,7 @@ namespace NSimpleOLAP.Schema
 
     public new bool HasLevels { get { return LevelDimensions.Count > 0; } }
 
-    public IList<DimensionDate<T>> LevelDimensions
+    public IList<DimensionTime<T>> LevelDimensions
     {
       get;
       private set;

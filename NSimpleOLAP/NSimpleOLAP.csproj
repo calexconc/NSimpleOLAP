@@ -82,6 +82,7 @@
     <Compile Include="Common\CanonicFormater.cs" />
     <Compile Include="Common\Collections\TSDictionary.cs" />
     <Compile Include="Common\Collections\TSList.cs" />
+    <Compile Include="Common\Converters\TimeLevelListFieldConverter.cs" />
     <Compile Include="Common\DataSourceException.cs" />
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\GuidIdentityKey.cs" />

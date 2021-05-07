@@ -79,12 +79,23 @@ namespace NSimpleOLAP.Configuration
     /// <summary>
     ///
     /// </summary>
-    [ConfigurationProperty("levels", IsRequired = false)]
+    [ConfigurationProperty("dateLevels", IsRequired = false)]
     [TypeConverter(typeof(DateLevelListFieldConverter))]
-    public List<DateLevels> Levels
+    public List<DateLevels> DateLevels
     {
-      get { return (List<DateLevels>)this["levels"]; }
-      set { this["levels"] = value; }
+      get { return (List<DateLevels>)this["dateLevels"]; }
+      set { this["dateLevels"] = value; }
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    [ConfigurationProperty("timeLevels", IsRequired = false)]
+    [TypeConverter(typeof(TimeLevelListFieldConverter))]
+    public List<TimeLevels> TimeLevels
+    {
+      get { return (List<TimeLevels>)this["timeLevels"]; }
+      set { this["timeLevels"] = value; }
     }
 
     /// <summary>

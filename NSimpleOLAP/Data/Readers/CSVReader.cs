@@ -96,6 +96,9 @@ namespace NSimpleOLAP.Data.Readers
         else if (!string.IsNullOrEmpty(Config.Fields[i].Format) 
           && Config.Fields[i].FieldType == typeof(DateTime))
           values[i] = value.GetDate(Config.Fields[i].Format);
+        else if (!string.IsNullOrEmpty(Config.Fields[i].Format)
+          && Config.Fields[i].FieldType == typeof(TimeSpan))
+          values[i] = value.GetTimeSpan(Config.Fields[i].Format);
       }
 
       return values;

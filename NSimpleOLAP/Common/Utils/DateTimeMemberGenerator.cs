@@ -77,7 +77,7 @@ namespace NSimpleOLAP.Common.Utils
     {
       for (var i = 0; i <= 23; i++)
       {
-        yield return new Tuple<T, string>((T)Convert.ChangeType(i, typeof(T)), i.ToString().PadLeft(2, '0'));
+        yield return new Tuple<T, string>((T)Convert.ChangeType(i+1, typeof(T)), i.ToString().PadLeft(2, '0'));
       }
     }
 
@@ -86,7 +86,7 @@ namespace NSimpleOLAP.Common.Utils
     {
       for (var i = 0; i <= 59; i++)
       {
-        yield return new Tuple<T, string>((T)Convert.ChangeType(i, typeof(T)), i.ToString().PadLeft(2, '0'));
+        yield return new Tuple<T, string>((T)Convert.ChangeType(i+1, typeof(T)), i.ToString().PadLeft(2, '0'));
       }
     }
 
@@ -198,7 +198,7 @@ namespace NSimpleOLAP.Common.Utils
     public static T TransformToHour<T>(TimeSpan timespan)
       where T : struct, IComparable
     {
-      var value = timespan.Hours;
+      var value = timespan.Hours + 1;
 
       return value.SetOutput<T>();
     }
@@ -206,7 +206,7 @@ namespace NSimpleOLAP.Common.Utils
     public static T TransformToMinutes<T>(TimeSpan timespan)
       where T : struct, IComparable
     {
-      var value = timespan.Minutes;
+      var value = timespan.Minutes + 1;
 
       return value.SetOutput<T>();
     }
@@ -214,7 +214,7 @@ namespace NSimpleOLAP.Common.Utils
     public static T TransformToSeconds<T>(TimeSpan timespan)
       where T : struct, IComparable
     {
-      var value = timespan.Seconds;
+      var value = timespan.Seconds + 1;
 
       return value.SetOutput<T>();
     }
@@ -222,7 +222,7 @@ namespace NSimpleOLAP.Common.Utils
     public static T TransformToTime<T>(TimeSpan timespan)
       where T : struct, IComparable
     {
-      var value = timespan.Hours * 1000
+      var value = (timespan.Hours + 1 )* 1000
         + timespan.Minutes * 100
         + timespan.Seconds;
 

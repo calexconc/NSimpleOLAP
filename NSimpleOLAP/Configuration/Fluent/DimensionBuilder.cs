@@ -69,14 +69,23 @@ namespace NSimpleOLAP.Configuration.Fluent
     public DimensionBuilder SetToDateSource(params DateLevels[] levels)
     {
       _element.DimensionType = DimensionType.Date;
-      _element.Levels = levels.ToList();
+      _element.DateLevels = levels.ToList();
+      Validate();
+      return this;
+    }
+
+    public DimensionBuilder SetToTimeSource(params TimeLevels[] levels)
+    {
+      _element.DimensionType = DimensionType.Time;
+      _element.TimeLevels = levels.ToList();
       Validate();
       return this;
     }
 
     public DimensionBuilder SetLevelDimensions(params string[] levels)
     {
-      if (_element.DimensionType != DimensionType.Date)
+      if (_element.DimensionType != DimensionType.Date
+        && _element.DimensionType != DimensionType.Time)
         _element.DimensionType = DimensionType.Levels;
       
       _element.LevelLabels = levels;
@@ -95,13 +104,20 @@ namespace NSimpleOLAP.Configuration.Fluent
           throw new Exception("Date dimensions don't need a descriptor table mappings.");
         if (_element.LevelLabels?.Length > 0 && 
            _element.DimensionType == DimensionType.Date &&
-            _element.Levels.Count != _element.LevelLabels.Length)
+            _element.DateLevels.Count != _element.LevelLabels.Length)
+          throw new Exception("The number of Date Time Levels don\'t match the number of Level Labels.");
+        if (_element.LevelLabels?.Length > 0 &&
+           _element.DimensionType == DimensionType.Time &&
+            _element.TimeLevels.Count != _element.LevelLabels.Length)
           throw new Exception("The number of Date Time Levels don\'t match the number of Level Labels.");
       }
 
       if (_element.DimensionType == DimensionType.Numeric)
       {
-        if (_element.Levels?.Count > 0)
+        if (_element.DateLevels?.Count > 0)
+          throw new Exception("Non Date dimensions can\'t have date time levels.");
+
+        if (_element.TimeLevels?.Count > 0)
           throw new Exception("Non Date dimensions can\'t have date time levels.");
       }
     }

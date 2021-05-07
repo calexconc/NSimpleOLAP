@@ -82,6 +82,19 @@ namespace NSimpleOLAP.Configuration.Fluent
       return this;
     }
 
+    public DataSourceBuilder AddTimeField(string name, int index, string format)
+    {
+      FieldConfig field = new FieldConfig()
+      {
+        Name = name,
+        FieldType = typeof(TimeSpan),
+        Index = index,
+        Format = format,
+      };
+      _element.Fields.Add(field);
+      return this;
+    }
+
     public DataSourceBuilder AddField(string name, int index, Type type)
     {
       FieldConfig field = new FieldConfig() { Name = name, FieldType = type, Index = index };
