@@ -139,6 +139,9 @@
     <Compile Include="Configuration\SourceMappingsCollection.cs" />
     <Compile Include="Configuration\SourceMappingsElement.cs" />
     <Compile Include="Configuration\StorageConfig.cs" />
+    <Compile Include="Configuration\TransformerConfigElement.cs" />
+    <Compile Include="Configuration\TransformerItemCollectionConfig.cs" />
+    <Compile Include="Configuration\TransformerItemConfig.cs" />
     <Compile Include="CubeDefinitions\Cell.cs" />
     <Compile Include="CubeDefinitions\CellCollection.cs" />
     <Compile Include="CubeDefinitions\Cube.cs" />
@@ -165,6 +168,7 @@
     <Compile Include="Data\DataSourceCollection.cs" />
     <Compile Include="Data\DefaultDataSource.cs" />
     <Compile Include="Data\Interfaces\IDataSource.cs" />
+    <Compile Include="Data\Interfaces\IDataTransformer.cs" />
     <Compile Include="Data\MeasureValuesCollection.cs" />
     <Compile Include="Data\Providers\DBFactory.cs" />
     <Compile Include="Data\Readers\AbsReader.cs" />
@@ -172,6 +176,8 @@
     <Compile Include="Data\Readers\CSVReader.cs" />
     <Compile Include="Data\Readers\DTableReader.cs" />
     <Compile Include="Data\Readers\DBReader.cs" />
+    <Compile Include="Data\Readers\TransformerReader.cs" />
+    <Compile Include="Data\Transformers\MemberIntervalTransformer.cs" />
     <Compile Include="Query\Builder\AndPredicateBuilder.cs" />
     <Compile Include="Query\Axis.cs" />
     <Compile Include="Query\Builder\AxisBuilder.cs" />

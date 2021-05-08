@@ -42,6 +42,9 @@ namespace NSimpleOLAP.Data.Readers
         case DataSourceType.DataSet:
           reader = new DTableReader(config);
           break;
+        case DataSourceType.Transformer:
+          reader = new TransformerReader(config);
+          break;
       }
 
       return reader;

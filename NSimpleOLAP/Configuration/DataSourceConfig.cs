@@ -33,7 +33,7 @@ namespace NSimpleOLAP.Configuration
     public FieldConfigCollection Fields
     {
       get { return (FieldConfigCollection)this["Fields"]; }
-      set { this["type"] = value; }
+      set { this["Fields"] = value; }
     }
 
     [ConfigurationProperty("DBConfig")]
@@ -55,6 +55,14 @@ namespace NSimpleOLAP.Configuration
     {
       get { return (DataTableConfig)this["DTableConfig"]; }
       set { this["DTableConfig"] = value; }
+    }
+
+    
+    [ConfigurationProperty("TransformerConfig")]
+    public TransformerConfigElement TransformerConfig
+    {
+      get { return (TransformerConfigElement)this["TransformerConfig"]; }
+      set { this["TransformerConfig"] = value; }
     }
   }
 }
