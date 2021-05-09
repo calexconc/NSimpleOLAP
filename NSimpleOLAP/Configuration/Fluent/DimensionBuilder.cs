@@ -129,12 +129,11 @@ namespace NSimpleOLAP.Configuration.Fluent
       }
 
       if (_element.SourceIsGenerated 
-        && !string.IsNullOrEmpty(_element.Source)
         && _element.ValueFieldIndex != null
         && !string.IsNullOrEmpty(_element.DesFieldName)
         && !string.IsNullOrEmpty(_element.ValueFieldName))
       {
-        throw new Exception("Generated dimensions can\'t have named sources or column mappings.");
+        throw new Exception("Generated dimensions can\'t have column mappings.");
       }
     }
 
