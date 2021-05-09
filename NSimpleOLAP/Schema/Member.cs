@@ -2,6 +2,7 @@
 using NSimpleOLAP.Schema.Interfaces;
 using System;
 using System.Collections.Generic;
+using NSimpleOLAP.Data.Interfaces;
 
 namespace NSimpleOLAP.Schema
 {
@@ -48,5 +49,16 @@ namespace NSimpleOLAP.Schema
     }
 
     public IDictionary<string, T> Levels { get; }
+  }
+
+  public class MemberGenerated<T> : Member<T>
+    where T : struct, IComparable
+  {
+    public MemberGenerated(IDataTransformer transformer)
+    {
+      Transformer = transformer;
+    }
+
+    public IDataTransformer Transformer { get; private set; }
   }
 }

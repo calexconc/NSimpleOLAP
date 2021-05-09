@@ -78,13 +78,27 @@ namespace NSimpleOLAP.Schema
     {
       using (AbsReader reader = this.DataSource.GetReader())
       {
-        while (reader.Next())
+        if (!Config.SourceIsGenerated)
         {
-          this.Members.Add(new Member<T>()
+          while (reader.Next())
           {
-            ID = (T)reader.Current[this.Config.ValueFieldName],
-            Name = reader.Current[this.Config.DesFieldName].ToString()
-          });
+            this.Members.Add(new Member<T>()
+            {
+              ID = (T)reader.Current[this.Config.ValueFieldName],
+              Name = reader.Current[this.Config.DesFieldName].ToString()
+            });
+          }
+        }
+        else
+        {
+          while (reader.Next())
+          {
+            this.Members.Add(new MemberGenerated<T>((IDataTransformer)reader.Current["Transformer"])
+            {
+              ID = (T)reader.Current["Value"],
+              Name = reader.Current["Name"].ToString()
+            });
+          }
         }
       }
     }

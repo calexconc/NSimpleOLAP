@@ -114,5 +114,12 @@ namespace NSimpleOLAP.Configuration
       get { return (string)this["parentDimension"]; }
       set { this["parentDimension"] = value; }
     }
+
+    [ConfigurationProperty("sourceIsGenerated", DefaultValue = false)]
+    public bool SourceIsGenerated
+    {
+      get { return (bool)this["sourceIsGenerated"]; }
+      set { this["sourceIsGenerated"] = value; }
+    }
   }
 }

@@ -13,6 +13,7 @@ namespace NSimpleOLAP.Configuration.Fluent
     private Action<CSVConfigBuilder> _csvconfig;
     private Action<DBConfigBuilder> _dbconfig;
     private Action<DataTableConfigBuilder> _dtconfig;
+    private Action<TransformerConfigBuilder> _transfconfig;
 
     public DataSourceBuilder()
     {
@@ -40,9 +41,15 @@ namespace NSimpleOLAP.Configuration.Fluent
       return this;
     }
 
-    public DataSourceBuilder SetDBConfig(Action<DataTableConfigBuilder> config)
+    public DataSourceBuilder SetDataTableConfig(Action<DataTableConfigBuilder> config)
     {
       _dtconfig = config;
+      return this;
+    }
+
+    public DataSourceBuilder SetTransformerTableConfig(Action<TransformerConfigBuilder> config)
+    {
+      _transfconfig = config;
       return this;
     }
 
@@ -121,6 +128,13 @@ namespace NSimpleOLAP.Configuration.Fluent
         DataTableConfigBuilder dtbuilder = new DataTableConfigBuilder();
         _dtconfig(dtbuilder);
         _element.DTableConfig = dtbuilder.Create();
+      }
+      else if (_element.SourceType == DataSourceType.Transformer)
+      {
+        var trfbuilder = new TransformerConfigBuilder();
+
+        _transfconfig(trfbuilder);
+        _element.TransformerConfig = trfbuilder.Create();
       }
 
       return _element;

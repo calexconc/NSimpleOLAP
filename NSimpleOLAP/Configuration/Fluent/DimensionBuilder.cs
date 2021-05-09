@@ -93,6 +93,13 @@ namespace NSimpleOLAP.Configuration.Fluent
       return this;
     }
 
+    public DimensionBuilder SetSourceMembersAreGenerated()
+    {
+      _element.SourceIsGenerated = true;
+      Validate();
+      return this;
+    }
+
     private void Validate()
     {
       if (_element.DimensionType == DimensionType.Date)
@@ -119,6 +126,15 @@ namespace NSimpleOLAP.Configuration.Fluent
 
         if (_element.TimeLevels?.Count > 0)
           throw new Exception("Non Date dimensions can\'t have date time levels.");
+      }
+
+      if (_element.SourceIsGenerated 
+        && !string.IsNullOrEmpty(_element.Source)
+        && _element.ValueFieldIndex != null
+        && !string.IsNullOrEmpty(_element.DesFieldName)
+        && !string.IsNullOrEmpty(_element.ValueFieldName))
+      {
+        throw new Exception("Generated dimensions can\'t have named sources or column mappings.");
       }
     }
 

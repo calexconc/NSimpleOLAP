@@ -115,6 +115,7 @@
     <Compile Include="Configuration\Fluent\DBConfigBuilder.cs" />
     <Compile Include="Configuration\Fluent\FluentExtensions.cs" />
     <Compile Include="Configuration\Fluent\MolapStorageBuilder.cs" />
+    <Compile Include="Configuration\Fluent\TransformerConfigBuilder.cs" />
     <Compile Include="Configuration\MolapStorageConfig.cs" />
     <Compile Include="Configuration\OlapConfigSectionSettings.cs" />
     <Compile Include="Configuration\CubeConfig.cs" />

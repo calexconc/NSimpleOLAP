@@ -2,6 +2,7 @@
 using NSimpleOLAP.Data.Readers;
 using NSimpleOLAP.Schema;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using NSimpleOLAP.Common.Utils;
 using NSimpleOLAP.Common;
@@ -59,12 +60,35 @@ namespace NSimpleOLAP.Data
     private void HandleSimpleDimension(AbsRowData rowdata, SourceMappingsElement item, List<KeyValuePair<T, T>> retlist)
     {
       Dimension<T> dimension = _schema.Dimensions[item.Dimension];
-      T segment = (T)Convert.ChangeType(rowdata[item.Field], typeof(T));
 
-      if (dimension.Members.ContainsKey(segment))
+      if (!dimension.Config.SourceIsGenerated)
       {
-        KeyValuePair<T, T> pair = new KeyValuePair<T, T>(dimension.ID, segment);
-        retlist.Add(pair);
+        T segment = (T)Convert.ChangeType(rowdata[item.Field], typeof(T));
+
+        if (dimension.Members.ContainsKey(segment))
+        {
+          KeyValuePair<T, T> pair = new KeyValuePair<T, T>(dimension.ID, segment);
+          retlist.Add(pair);
+        }
+      }
+      else
+      {
+        var value = rowdata[item.Field];
+
+        if (value != null)
+        {
+          foreach (var member in dimension.Members.Cast<MemberGenerated<T>>())
+          {
+            var result = member.Transformer.Transform(value);
+
+            if (result != null) // todo change this to handle different transformations
+            {
+              KeyValuePair<T, T> pair = new KeyValuePair<T, T>(dimension.ID, member.ID);
+              retlist.Add(pair);
+              break;
+            }
+          }
+        }
       }
     }
 
