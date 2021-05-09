@@ -179,6 +179,7 @@
     <Compile Include="Data\Readers\DBReader.cs" />
     <Compile Include="Data\Readers\TransformerReader.cs" />
     <Compile Include="Data\Transformers\MemberIntervalTransformer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query\Builder\AndPredicateBuilder.cs" />
     <Compile Include="Query\Axis.cs" />
     <Compile Include="Query\Builder\AxisBuilder.cs" />
