@@ -1,91 +1,71 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Configuration;
-using NSimpleOLAP.Common.Interfaces;
-
+﻿using System.Collections.Generic;
 
 namespace NSimpleOLAP.Configuration
 {
   /// <summary>
   /// A collection of MeasureElement(s).
   /// </summary>
-  public sealed class MeasureConfigCollection : IConfigCollection<MeasureConfig>
+  public sealed class MeasureConfigCollection : AbstractConfigCollection<MeasureConfig>
   {
-    #region Properties
+    public MeasureConfigCollection()
+    {
+      indexer = new Dictionary<string, int>();
+      elements = new List<MeasureConfig>();
+    }
 
     /// <summary>
-    /// Retrieve and item in the collection by index.
+    /// Adds a CubeElement to the configuration file.
     /// </summary>
-    public MeasureConfig this[int index]
+    /// <param name="element">The CubeElement to add.</param>
+    public override void Add(MeasureConfig element)
     {
-      get { throw new System.NotImplementedException(); }
-      set
+      if (indexer.ContainsKey(element.Name))
+        throw new System.Exception($"Element {element.Name} already exists in collection.");
+
+      elements.Add(element);
+      indexer.Add(element.Name, elements.Count - 1);
+    }
+
+    /// <summary>
+    /// Removes a CubeElement with the given name.
+    /// </summary>
+    /// <param name="name">The name of the CubeElement to remove.</param>
+    public override void Remove(string name)
+    {
+      if (!indexer.ContainsKey(name))
+        return;
+
+      var index = indexer[name];
+
+      indexer.Remove(name);
+      elements.RemoveAt(index);
+
+      for (var i = 0; i < elements.Count; i++)
       {
-        throw new System.NotImplementedException();
+        var itemName = elements[i].Name;
+
+        indexer[itemName] = i;
       }
     }
 
-    public new MeasureConfig this[string name]
+    public override bool Remove(MeasureConfig item)
     {
-      get { throw new System.NotImplementedException(); }
-      set
+      if (!indexer.ContainsKey(item.Name))
+        return false;
+
+      var index = indexer[item.Name];
+
+      indexer.Remove(item.Name);
+      elements.RemoveAt(index);
+
+      for (var i = 0; i < elements.Count; i++)
       {
-        throw new System.NotImplementedException();
+        var name = elements[i].Name;
+
+        indexer[name] = i;
       }
-    }
 
-    public int Count => throw new System.NotImplementedException();
-
-    public bool IsReadOnly => throw new System.NotImplementedException();
-
-    #endregion Properties
-
-    /// <summary>
-    /// Adds a MeasureElement to the configuration file.
-    /// </summary>
-    /// <param name="element">The MeasureElement to add.</param>
-    public void Add(MeasureConfig element)
-    {
-      throw new System.NotImplementedException();
-    }
-
-    public void Clear()
-    {
-      throw new System.NotImplementedException();
-    }
-
-    public bool Contains(MeasureConfig item)
-    {
-      throw new System.NotImplementedException();
-    }
-
-    public void CopyTo(MeasureConfig[] array, int arrayIndex)
-    {
-      throw new System.NotImplementedException();
-    }
-
-    public IEnumerator<MeasureConfig> GetEnumerator()
-    {
-      throw new System.NotImplementedException();
-    }
-
-    /// <summary>
-    /// Removes a MeasureElement with the given name.
-    /// </summary>
-    /// <param name="name">The name of the MeasureElement to remove.</param>
-    public void Remove(string name)
-    {
-      throw new System.NotImplementedException();
-    }
-
-    public bool Remove(MeasureConfig item)
-    {
-      throw new System.NotImplementedException();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-      throw new System.NotImplementedException();
+      return true;
     }
   }
 }

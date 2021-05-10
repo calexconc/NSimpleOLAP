@@ -37,6 +37,6 @@ namespace NSimpleOLAP.Configuration
     {
       get;
       set;
-    }
+    } = "";
   }
 }

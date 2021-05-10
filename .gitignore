@@ -16,3 +16,8 @@ UnitTests/obj/*
 ExampleApp/bin/*
 ExampleApp/obj/*
 NSimpleOLAP/obj/*
+NSimpleOLAP-Core/obj/*
+NSimpleOLAP-Core/bin/*
+UnitTests-Core/bin/*
+UnitTests-Core/obj/*
+*.v2
