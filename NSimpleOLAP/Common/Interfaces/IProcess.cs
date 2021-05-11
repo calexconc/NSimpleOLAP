@@ -7,6 +7,6 @@
   {
     void Process();
 
-    void Refresh();
+    void Refresh(bool all);
   }
 }

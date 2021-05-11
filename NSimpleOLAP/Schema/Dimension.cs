@@ -103,7 +103,7 @@ namespace NSimpleOLAP.Schema
       }
     }
 
-    public virtual void Refresh()
+    public virtual void Refresh(bool all)
     {
       throw new NotImplementedException();
     }
