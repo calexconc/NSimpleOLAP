@@ -151,7 +151,7 @@ namespace NSimpleOLAP
       this.IsProcessing = false;
     }
 
-    public void Refresh(bool all)
+    public void Refresh(bool all = false)
     {
       this.IsProcessing = true;
 

@@ -76,6 +76,7 @@
     <Compile Include="CubeInitializationWithTimeTests.cs" />
     <Compile Include="CubeInitializationWithDateTests.cs" />
     <Compile Include="CubeInitializationWithLevelDimensions.cs" />
+    <Compile Include="CubeRefreshDataTests.cs" />
     <Compile Include="CubeSourcesFixture.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
