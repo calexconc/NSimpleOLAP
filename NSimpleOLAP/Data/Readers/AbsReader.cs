@@ -45,6 +45,9 @@ namespace NSimpleOLAP.Data.Readers
         case DataSourceType.Transformer:
           reader = new TransformerReader(config);
           break;
+        case DataSourceType.ObjectMapper:
+          reader = new ObjectMapperReader(config);
+          break;
       }
 
       return reader;

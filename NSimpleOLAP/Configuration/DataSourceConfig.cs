@@ -64,5 +64,12 @@ namespace NSimpleOLAP.Configuration
       get { return (TransformerConfigElement)this["TransformerConfig"]; }
       set { this["TransformerConfig"] = value; }
     }
+
+    [ConfigurationProperty("ObjectMapperConfig")]
+    public ObjectMapperConfigElement ObjectMapperConfig
+    {
+      get { return (ObjectMapperConfigElement)this["ObjectMapperConfig"]; }
+      set { this["ObjectMapperConfig"] = value; }
+    }
   }
 }

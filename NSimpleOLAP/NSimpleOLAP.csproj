@@ -115,8 +115,10 @@
     <Compile Include="Configuration\Fluent\DBConfigBuilder.cs" />
     <Compile Include="Configuration\Fluent\FluentExtensions.cs" />
     <Compile Include="Configuration\Fluent\MolapStorageBuilder.cs" />
+    <Compile Include="Configuration\Fluent\ObjectMapperConfigBuilder.cs" />
     <Compile Include="Configuration\Fluent\TransformerConfigBuilder.cs" />
     <Compile Include="Configuration\MolapStorageConfig.cs" />
+    <Compile Include="Configuration\ObjectMapperConfigElement.cs" />
     <Compile Include="Configuration\OlapConfigSectionSettings.cs" />
     <Compile Include="Configuration\CubeConfig.cs" />
     <Compile Include="Configuration\DataSourceConfig.cs" />
@@ -178,6 +180,7 @@
     <Compile Include="Data\Readers\CSVReader.cs" />
     <Compile Include="Data\Readers\DTableReader.cs" />
     <Compile Include="Data\Readers\DBReader.cs" />
+    <Compile Include="Data\Readers\ObjectMapperReader.cs" />
     <Compile Include="Data\Readers\TransformerReader.cs" />
     <Compile Include="Data\Transformers\MemberIntervalTransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

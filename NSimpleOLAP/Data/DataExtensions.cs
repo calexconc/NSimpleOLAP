@@ -34,6 +34,28 @@ namespace NSimpleOLAP.Data
       }
     }
 
+    public static void AppendData<T>(this Cube<T> cube,  IEnumerable<string[]> rows)
+      where T : struct, IComparable
+    {
+      var dataSource = cube.Config.DataSources[cube.Source];
+
+      if (dataSource.SourceType != Common.DataSourceType.CSV)
+        throw new Exception("Use this data appender when the original data source is a CSV file.");
+
+      var row = new Row(dataSource.Fields.GetFieldIndexes());
+
+      foreach (var values in rows)
+      {
+        if (dataSource.Fields.Count > values.Length)
+          throw new Exception("Number of values does not match the number of mapped fields in the original datasource.");
+
+        row.SetData(GetValues(dataSource, values));
+
+        cube.Storage.AddRowData(cube.RowHelper.GetDimensions(row),
+            cube.RowHelper.GetMeasureData(row));
+      }
+    }
+
     public static void AppendData<T>(this Cube<T> cube, params object[] values)
       where T : struct, IComparable
     {
@@ -50,6 +72,24 @@ namespace NSimpleOLAP.Data
           cube.RowHelper.GetMeasureData(row));
     }
 
+    public static void AppendData<T>(this Cube<T> cube, IEnumerable<object[]> rows)
+      where T : struct, IComparable
+    {
+      var dataSource = cube.Config.DataSources[cube.Source];
+      var row = new Row(dataSource.Fields.GetFieldIndexes());
+
+      foreach (var values in rows)
+      {
+        if (dataSource.Fields.Count > values.Length)
+          throw new Exception("Number of values does not match the number of mapped fields in the original datasource.");
+
+        row.SetData(GetValues(dataSource, values));
+
+        cube.Storage.AddRowData(cube.RowHelper.GetDimensions(row),
+            cube.RowHelper.GetMeasureData(row));
+      }
+    }
+
     public static void AppendData<T>(this Cube<T> cube, params KeyValuePair<string, object>[] values)
       where T : struct, IComparable
     {
@@ -64,6 +104,24 @@ namespace NSimpleOLAP.Data
 
       cube.Storage.AddRowData(cube.RowHelper.GetDimensions(row),
           cube.RowHelper.GetMeasureData(row));
+    }
+
+    public static void AppendData<T>(this Cube<T> cube, IEnumerable<KeyValuePair<string, object>[]> rows)
+      where T : struct, IComparable
+    {
+      var dataSource = cube.Config.DataSources[cube.Source];
+      var row = new Row(dataSource.Fields.GetFieldIndexes());
+
+      foreach (var values in rows)
+      {
+        if (dataSource.Fields.Count > values.Length)
+          throw new Exception("Number of values does not match the number of mapped fields in the original datasource.");
+
+        row.SetData(GetValues(dataSource, values));
+
+        cube.Storage.AddRowData(cube.RowHelper.GetDimensions(row),
+            cube.RowHelper.GetMeasureData(row));
+      }
     }
 
     private static object[] GetValues(DataSourceConfig config, string[] strs)
