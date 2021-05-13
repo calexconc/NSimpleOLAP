@@ -8,6 +8,10 @@ At the present moment this project is still in alpha stage and unstable, and onl
 Some of its implementations features are experimental, or are there to allow easy testing of different opportunities for optimization or feature enhancement.
 More on that later.
 
+## Contents
+- [Quick Start](##Quick-Start)
+- [Configuring a Cube](Markdown/Configuration.md)
+
 ## Quick Start
 
 Building a Cube will require some intial setup to identify the data sources, mappings and defining the metadata.

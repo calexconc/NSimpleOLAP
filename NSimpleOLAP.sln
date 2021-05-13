@@ -18,6 +18,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NSimpleOLAP-Core", "NSimple
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests-Core", "UnitTests-Core\UnitTests-Core.csproj", "{5448DB5A-E88A-4A0D-B9DB-34AF9BBB0C22}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{65386F23-1231-4033-930A-D2FF78F3DEE6}"
+	ProjectSection(SolutionItems) = preProject
+		Markdown\Configuration.md = Markdown\Configuration.md
+		Markdown\Datasources.md = Markdown\Datasources.md
+		Markdown\DimensionsAndMeasures.md = Markdown\DimensionsAndMeasures.md
+		Markdown\Querying.md = Markdown\Querying.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +95,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{65386F23-1231-4033-930A-D2FF78F3DEE6} = {6122B37A-B7BD-45B8-98DC-39197BF80E14}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E189568-708A-4285-BBE6-76BE67E4506D}
