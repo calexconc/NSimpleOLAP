@@ -74,7 +74,7 @@ namespace NSimpleOLAP.Data.Readers
 
       for (int i = 0; i < this.Config.Fields.Count; i++)
       {
-        string value = strs[i].Trim();
+        string value = strs[Config.Fields[i].Index].Trim();
 
         if (string.IsNullOrEmpty(value))
         {

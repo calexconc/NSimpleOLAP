@@ -14,6 +14,7 @@ namespace NSimpleOLAP.Configuration.Fluent
     private Action<DBConfigBuilder> _dbconfig;
     private Action<DataTableConfigBuilder> _dtconfig;
     private Action<TransformerConfigBuilder> _transfconfig;
+    private Action<ObjectMapperConfigBuilder> _objmapperconfig;
 
     public DataSourceBuilder()
     {
@@ -50,6 +51,12 @@ namespace NSimpleOLAP.Configuration.Fluent
     public DataSourceBuilder SetTransformerTableConfig(Action<TransformerConfigBuilder> config)
     {
       _transfconfig = config;
+      return this;
+    }
+
+    public DataSourceBuilder SetObjectMapperConfig(Action<ObjectMapperConfigBuilder> config)
+    {
+      _objmapperconfig = config;
       return this;
     }
 
@@ -135,6 +142,13 @@ namespace NSimpleOLAP.Configuration.Fluent
 
         _transfconfig(trfbuilder);
         _element.TransformerConfig = trfbuilder.Create();
+      }
+      else if (_element.SourceType == DataSourceType.ObjectMapper)
+      {
+        var trfbuilder = new ObjectMapperConfigBuilder();
+
+        _objmapperconfig(trfbuilder);
+        _element.ObjectMapperConfig = trfbuilder.Create();
       }
 
       return _element;

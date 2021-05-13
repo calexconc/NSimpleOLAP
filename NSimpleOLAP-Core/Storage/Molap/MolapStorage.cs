@@ -165,6 +165,15 @@ namespace NSimpleOLAP.Storage.Molap
       return count;
     }
 
+    public void DropCells()
+    {
+      _factsCache.Clear();
+      _onDemandAggregations.Clear();
+      var oldGraph = _globalGraph;
+      _globalGraph = new Graph<T, U>(_cubeid, this.Config, _cellValuesHelper);
+      oldGraph.Dispose();
+    }
+
     public void Dispose()
     {
       _globalGraph.Dispose();

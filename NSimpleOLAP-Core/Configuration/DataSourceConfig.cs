@@ -59,5 +59,12 @@ namespace NSimpleOLAP.Configuration
       get;
       set;
     }
+
+    public ObjectMapperConfigElement ObjectMapperConfig
+    {
+      get;
+      set;
+    }
+    
   }
 }

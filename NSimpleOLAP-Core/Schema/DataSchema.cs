@@ -233,9 +233,15 @@ namespace NSimpleOLAP.Schema
       this.ProcessDimensions();
     }
 
-    public void Refresh()
+    public void Refresh(bool all)
     {
-      throw new NotImplementedException();
+      if (all)
+      {
+        foreach (var dimension in Dimensions)
+          dimension.Members.Clear();
+
+        this.ProcessDimensions();
+      }
     }
 
     #endregion IProcess implementation

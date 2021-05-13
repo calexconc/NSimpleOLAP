@@ -98,6 +98,14 @@ namespace NSimpleOLAP
       private set;
     }
 
+    internal DataRowHelper<T> RowHelper
+    {
+      get
+      {
+        return _rowHelper;
+      }
+    }
+
     #endregion props
 
     #region IDisposable implementations
@@ -143,9 +151,15 @@ namespace NSimpleOLAP
       this.IsProcessing = false;
     }
 
-    public void Refresh()
+    public void Refresh(bool all = false)
     {
-      throw new NotImplementedException();
+      this.IsProcessing = true;
+
+      this.Storage.DropCells();
+      this.Schema.Refresh(all);
+      this.ProcessDataSource();
+
+      this.IsProcessing = false;
     }
 
     #endregion IProcess implementation

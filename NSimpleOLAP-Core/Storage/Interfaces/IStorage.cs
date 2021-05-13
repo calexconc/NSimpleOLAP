@@ -28,6 +28,8 @@ namespace NSimpleOLAP.Storage.Interfaces
 
     void AddRowData(KeyValuePair<T, T>[] pairs, MeasureValuesCollection<T> data);
 
+    void DropCells();
+
     int GetCellCount();
 
     T CreateAggregation(KeyValuePair<T, T>[] axisPairs, IPredicate<T> predicateRoot);
