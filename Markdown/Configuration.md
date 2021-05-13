@@ -117,19 +117,68 @@ Also, data sources can be used to add new categories that are transforms of the 
 ```csharp
 
 builder.AddDataSource(dsbuild =>
+{
+  dsbuild.SetName("brackets")
+	.SetSourceType(DataSourceType.Transformer)
+	.SetTransformerTableConfig(transfbuild =>
 	{
-	  dsbuild.SetName("intervals")
-		.SetSourceType(DataSourceType.Transformer)
-		.SetTransformerTableConfig(transfbuild =>
-		{
-		  transfbuild
-			.AddIntervalSegment("Small Purchase", 0, 20)
-			.AddIntervalSegment("Medium Purchase", 21, 50)
-			.AddIntervalSegment("Large Purchase", 51, null);
-		});
+	  transfbuild
+		.AddIntervalSegment("Small Purchase", 0, 20)
+		.AddIntervalSegment("Medium Purchase", 21, 50)
+		.AddIntervalSegment("Large Purchase", 51, null);
 	});
+});
 
 ``` 
 
 This allows you to add a categoric dimension that is built around continuous data, which can be age to build age groups, or wage data to set wage brackets. And in this way being able to get more insights from the base data.
  
+### Setup Metadata
+
+In the metadata section your will be able to define the dimensions and measures that will be added to the Cube.
+
+```csharp
+
+builder.MetaData(mbuild =>
+{
+  mbuild.AddDimension("category", (dimbuild) =>
+  {
+	dimbuild.Source("categories")
+	  .ValueField("id")
+	  .DescField("description");
+  })
+  .AddMeasure("quantity", mesbuild =>
+  {
+	mesbuild.ValueField("items")
+	  .SetType(typeof(int));
+  });
+});
+``` 
+
+All the dimensions either coming from data sources or generated need to be added into this section. Like this example using the definition of purchasing brackets from the above data sources section.
+
+```csharp
+
+builder.MetaData(mbuild =>
+{
+  mbuild.AddDimension("purchase_size", dimbuild =>
+  {
+	dimbuild
+	  .Source("brackets")
+	  .SetSourceMembersAreGenerated();
+  });
+});
+``` 
+
+### Setup the Source Mappings
+
+This section will map the dimensions to the Facts data source, and once this step is done you can attempt to initialize the cube and start exploring.
+
+```csharp
+
+builder.SetSourceMappings((sourcebuild) =>
+  sourcebuild.SetSource("sales")
+  .AddMapping("category", "category")
+  .AddMapping("items", "purchase_size")
+);
+``` 
