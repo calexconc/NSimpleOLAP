@@ -78,6 +78,10 @@
     <Compile Include="CubeInitializationWithLevelDimensions.cs" />
     <Compile Include="CubeRefreshDataTests.cs" />
     <Compile Include="CubeSourcesFixture.cs" />
+    <Compile Include="CubeUsingObjectMapperDataSource.cs" />
+    <Compile Include="CubeUsingDataSetDataSource.cs" />
+    <Compile Include="ObjectMapperDataSourceFixture.cs" />
+    <Compile Include="DataSetDataSourceFixture.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryBuildTests.cs" />
