@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NSimpleOLAP;
-using NSimpleOLAP.Query;
-using NSimpleOLAP.Renderers;
+﻿using NSimpleOLAP;
 using NSimpleOLAP.Common;
 using NSimpleOLAP.Configuration.Fluent;
 using NUnit.Framework;
@@ -13,7 +6,7 @@ using NUnit.Framework;
 namespace UnitTests
 {
   [TestFixture]
-  public class CubeInitializationWithLevelDimensions
+  public class CubeInitializationWithLevelDimensionsTests
   {
     [Test]
     public void MolapAddLevelDimensionInit_Test()
@@ -84,9 +77,7 @@ namespace UnitTests
       Assert.AreEqual("Country", cube.Schema.Dimensions["Country"].Name);
       Assert.AreEqual(ItemType.Dimension, cube.Schema.Dimensions["Country"].ItemType);
       Assert.Greater(cube.Schema.Dimensions["Country"].ID, 1);
-
     }
-
 
     [Test]
     public void MolapAddDateDimensionInitCheckMembers_Test()

@@ -28,5 +28,17 @@ namespace NSimpleOLAP.Configuration
       get;
       set;
     }
+
+    public string ProviderName
+    {
+      get;
+      set;
+    }
+
+    public string AppSettings
+    {
+      get;
+      set;
+    } = "appsettings.json";
   }
 }

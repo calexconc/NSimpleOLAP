@@ -14,15 +14,22 @@
 
     #region public methods
 
-    public DBConfigBuilder SetConnection(string connection)
+    public DBConfigBuilder SetExternalConfig(string file)
+    {
+      _element.AppSettings = file;
+      return this;
+    }
+
+    public DBConfigBuilder SetConnection(string connection, string providerName)
     {
       _element.Connection = connection;
+      _element.ProviderName = providerName;
       return this;
     }
 
     public DBConfigBuilder SetQuery(string query)
     {
-      _element.Connection = query;
+      _element.Query = query;
       return this;
     }
 
