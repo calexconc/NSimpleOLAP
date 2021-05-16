@@ -22,7 +22,7 @@
 
     public DBConfigBuilder SetQuery(string query)
     {
-      _element.Connection = query;
+      _element.Query = query;
       return this;
     }
 

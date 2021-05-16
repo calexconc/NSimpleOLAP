@@ -1,26 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NSimpleOLAP;
-using NSimpleOLAP.Query;
-using NSimpleOLAP.Query.Builder;
-using NUnit.Framework;
-using NSimpleOLAP.Common.Utils;
+﻿using NSimpleOLAP.Common;
 using NSimpleOLAP.Configuration.Fluent;
-using NSimpleOLAP.Common;
+using NUnit.Framework;
+using System;
 
 namespace UnitTests
 {
   [TestFixture]
-  public class CubeUsingDataSetDataSource
+  public class CubeUsingSQLiteDatabaseDataSourceTests
   {
-
     private CubeBuilder GetCubeConfiguration()
     {
       CubeBuilder builder = new CubeBuilder();
-      var datset = DataSetDataSourceFixture.GetDataSources();
 
       builder.SetName("helloDataTable")
         .SetSourceMappings((sourcebuild) =>
@@ -34,9 +24,10 @@ namespace UnitTests
         .AddDataSource(dsbuild =>
         {
           dsbuild.SetName("sales")
-            .SetSourceType(DataSourceType.DataSet)
-            .SetDataTableConfig(dtbuild => {
-              dtbuild.SetDataTable(datset.Tables["Facts"]);
+            .SetSourceType(DataSourceType.DataBase)
+            .SetDBConfig(dbBuild => {
+              dbBuild.SetConnection("LITE")
+              .SetQuery("SELECT category, gender, place, datetime([date]) as 'date', expenses, items FROM Sales");
             })
             .AddField("category", typeof(int))
             .AddField("gender", typeof(int))
@@ -48,35 +39,38 @@ namespace UnitTests
         .AddDataSource(dsbuild =>
         {
           dsbuild.SetName("categories")
-            .SetSourceType(DataSourceType.DataSet)
+            .SetSourceType(DataSourceType.DataBase)
             .AddField("id", typeof(int))
             .AddField("description", typeof(string))
-            .SetDataTableConfig(dtbuild => {
-              dtbuild.SetDataTable(datset.Tables["Categories"]);
+            .SetDBConfig(dbBuild => {
+              dbBuild.SetConnection("LITE")
+              .SetQuery("SELECT id, description FROM Categories");
             });
         })
         .AddDataSource(dsbuild =>
         {
           dsbuild.SetName("genderes")
-            .SetSourceType(DataSourceType.DataSet)
+            .SetSourceType(DataSourceType.DataBase)
             .AddField("id", typeof(int))
             .AddField("description", 1, typeof(string))
-            .SetDataTableConfig(dtbuild => {
-              dtbuild.SetDataTable(datset.Tables["Gender"]);
+            .SetDBConfig(dbBuild => {
+              dbBuild.SetConnection("LITE")
+              .SetQuery("SELECT id, description FROM Genders");
             });
         })
         .AddDataSource(dsbuild =>
         {
           dsbuild.SetName("places")
-            .SetSourceType(DataSourceType.DataSet)
+            .SetSourceType(DataSourceType.DataBase)
             .AddField("id", typeof(int))
             .AddField("description", typeof(string))
             .AddField("idcountry", typeof(int))
             .AddField("country", typeof(string))
             .AddField("idregion", typeof(int))
             .AddField("region", typeof(string))
-            .SetDataTableConfig(dtbuild => {
-              dtbuild.SetDataTable(datset.Tables["Places"]);
+            .SetDBConfig(dbBuild => {
+              dbBuild.SetConnection("LITE")
+              .SetQuery("SELECT id, description, idcountry, country, idregion, region FROM Places");
             });
         })
         .MetaData(mbuild =>
@@ -112,7 +106,8 @@ namespace UnitTests
               .ValueField("idregion")
               .DescField("region");
           })
-          .AddDimension("date", dimbuild => {
+          .AddDimension("date", dimbuild =>
+          {
             dimbuild
             .SetToDateSource(DateLevels.YEAR, DateLevels.MONTH, DateLevels.DAY)
             .SetLevelDimensions("Year", "Month", "Day");
@@ -133,7 +128,7 @@ namespace UnitTests
     }
 
     [Test]
-    public void Setup_Cube_With_Only_DataTables_Test()
+    public void Setup_Cube_With_Only_SQLiteDB_Test()
     {
       var builder = GetCubeConfiguration();
       using (var cube = builder.Create<int>())

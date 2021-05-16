@@ -1,22 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NSimpleOLAP;
-using NSimpleOLAP.Query;
-using NSimpleOLAP.Query.Builder;
-using NUnit.Framework;
-using NSimpleOLAP.Common.Utils;
+﻿using NSimpleOLAP.Common;
 using NSimpleOLAP.Configuration.Fluent;
-using NSimpleOLAP.Common;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 
 namespace UnitTests
 {
   [TestFixture]
-  public class CubeUsingObjectMapperDataSource
+  public class CubeUsingObjectMapperDataSourceTests
   {
-
     private CubeBuilder GetCubeConfiguration()
     {
       CubeBuilder builder = new CubeBuilder();
@@ -35,9 +27,11 @@ namespace UnitTests
         {
           dsbuild.SetName("sales")
             .SetSourceType(DataSourceType.ObjectMapper)
-            .SetObjectMapperConfig(obMapper => {
+            .SetObjectMapperConfig(obMapper =>
+            {
               obMapper.SetCollection<Fact>(ObjectMapperDataSourceFixture.GetFacts())
-              .SetMapper<Fact>(x => {
+              .SetMapper<Fact>(x =>
+              {
                 var row = new KeyValuePair<string, object>[6] {
                   new KeyValuePair<string, object>("category", x.Category),
                   new KeyValuePair<string, object>("gender", x.Gender),
@@ -63,10 +57,12 @@ namespace UnitTests
             .SetSourceType(DataSourceType.ObjectMapper)
             .AddField("id", typeof(int))
             .AddField("description", typeof(string))
-            .SetObjectMapperConfig(obMapper => {
+            .SetObjectMapperConfig(obMapper =>
+            {
               obMapper.SetCollection<Category>(ObjectMapperDataSourceFixture.GetCategories())
-              .SetMapper<Category>(x => {
-                var row = new KeyValuePair<string, object>[2] { 
+              .SetMapper<Category>(x =>
+              {
+                var row = new KeyValuePair<string, object>[2] {
                   new KeyValuePair<string, object>("id", x.Id),
                   new KeyValuePair<string, object>("description", x.Description)
                 };
@@ -81,9 +77,11 @@ namespace UnitTests
             .SetSourceType(DataSourceType.ObjectMapper)
             .AddField("id", typeof(int))
             .AddField("description", 1, typeof(string))
-            .SetObjectMapperConfig(obMapper => {
+            .SetObjectMapperConfig(obMapper =>
+            {
               obMapper.SetCollection<Gender>(ObjectMapperDataSourceFixture.GetGender())
-              .SetMapper<Gender>(x => {
+              .SetMapper<Gender>(x =>
+              {
                 var row = new KeyValuePair<string, object>[2] {
                   new KeyValuePair<string, object>("id", x.Id),
                   new KeyValuePair<string, object>("description", x.Description)
@@ -103,9 +101,11 @@ namespace UnitTests
             .AddField("country", typeof(string))
             .AddField("idregion", typeof(int))
             .AddField("region", typeof(string))
-            .SetObjectMapperConfig(obMapper => {
+            .SetObjectMapperConfig(obMapper =>
+            {
               obMapper.SetCollection<Place>(ObjectMapperDataSourceFixture.GetPlaces())
-              .SetMapper<Place>(x => {
+              .SetMapper<Place>(x =>
+              {
                 var row = new KeyValuePair<string, object>[6] {
                   new KeyValuePair<string, object>("id", x.Id),
                   new KeyValuePair<string, object>("description", x.Description),
@@ -152,7 +152,8 @@ namespace UnitTests
               .ValueField("idregion")
               .DescField("region");
           })
-          .AddDimension("date", dimbuild => {
+          .AddDimension("date", dimbuild =>
+          {
             dimbuild
             .SetToDateSource(DateLevels.YEAR, DateLevels.MONTH, DateLevels.DAY)
             .SetLevelDimensions("Year", "Month", "Day");
