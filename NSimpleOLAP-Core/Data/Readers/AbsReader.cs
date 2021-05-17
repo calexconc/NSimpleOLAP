@@ -1,6 +1,5 @@
 ﻿using NSimpleOLAP.Common;
 using NSimpleOLAP.Configuration;
-using Microsoft.Extensions.Configuration;
 using System;
 
 namespace NSimpleOLAP.Data.Readers
@@ -26,7 +25,7 @@ namespace NSimpleOLAP.Data.Readers
 
     public abstract bool Next();
 
-    public static AbsReader Create(DataSourceConfig config)
+    public static AbsReader Create(DataSourceConfig config, DatabaseConfig dbConfig)
     {
       AbsReader reader = null;
 
@@ -37,8 +36,7 @@ namespace NSimpleOLAP.Data.Readers
           break;
 
         case DataSourceType.DataBase:
-          var builder = new ConfigurationBuilder().AddJsonFile(config.DBConfig.AppSettings);
-          reader = new DBReader(config, builder.Build()); // change this
+          reader = new DBReader(config, dbConfig);
           break;
 
         case DataSourceType.DataSet:

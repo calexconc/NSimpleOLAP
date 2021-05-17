@@ -1,11 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
-using NSimpleOLAP.Configuration;
+﻿using NSimpleOLAP.Configuration;
 using NSimpleOLAP.Configuration.Extensions;
-using NSimpleOLAP.Data.Providers;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 
 namespace NSimpleOLAP.Data.Readers
 {
@@ -18,12 +15,12 @@ namespace NSimpleOLAP.Data.Readers
     private IDbCommand _command;
     private IDataReader _reader;
     private IDbConnection _connection;
-    private IConfiguration _externalConfig;
+    private DatabaseConfig _dbConfig;
 
-    public DBReader(DataSourceConfig config, IConfiguration externalConfig)
+    public DBReader(DataSourceConfig config, DatabaseConfig dbConfig)
     {
       this.Config = config;
-      this._externalConfig = externalConfig;
+      this._dbConfig = dbConfig;
       this.Init();
     }
 
@@ -88,10 +85,9 @@ namespace NSimpleOLAP.Data.Readers
     {
       try
       {
-        var ConnectionString = ConfigurationExtensions.GetConnectionString(_externalConfig, this.Config.DBConfig.Connection);
-        var factory = DbProviderFactories.GetFactory(this.Config.DBConfig.ProviderName);
-        IDbConnection connection = factory.CreateConnection();
-        connection.ConnectionString = ConnectionString;
+        var settings = _dbConfig[this.Config.DBConfig.Connection];
+        IDbConnection connection = settings.ProviderFactory.CreateConnection();
+        connection.ConnectionString = settings.ConnectionString;
 
         return connection;
       }

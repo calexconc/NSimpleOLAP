@@ -12,6 +12,8 @@ namespace NSimpleOLAP.Data
   {
     private TSDictionary<string, IDataSource> _innerdict;
 
+    private readonly DatabaseConfig _dbConfig;
+
     public DataSourceCollection()
     {
       _innerdict = new TSDictionary<string, IDataSource>();
@@ -19,6 +21,7 @@ namespace NSimpleOLAP.Data
 
     public DataSourceCollection(CubeConfig config) : this()
     {
+      _dbConfig = config.Database;
       this.Initialize(config.DataSources);
     }
 
@@ -99,8 +102,10 @@ namespace NSimpleOLAP.Data
 
     private IDataSource CreateDataSource(DataSourceConfig config)
     {
-      IDataSource datasource = new DefaultDataSource(config);
-      return datasource;
+      if (config.SourceType != Common.DataSourceType.DataBase)
+        return new DefaultDataSource(config);
+      else
+        return new DefaultDataSource(config, _dbConfig);
     }
 
     #endregion private methods

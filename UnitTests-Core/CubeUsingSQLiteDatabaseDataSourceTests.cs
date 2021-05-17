@@ -1,8 +1,8 @@
-﻿using NSimpleOLAP.Common;
+﻿using Microsoft.Extensions.Configuration;
+using NSimpleOLAP.Common;
 using NSimpleOLAP.Configuration.Fluent;
 using NUnit.Framework;
 using System;
-using System.Data.Common;
 using System.Data.SQLite;
 
 namespace UnitTests
@@ -12,10 +12,9 @@ namespace UnitTests
   {
     private CubeBuilder GetCubeConfiguration()
     {
+      var confbuilder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
+      IConfiguration externalConfig = confbuilder.Build();
       CubeBuilder builder = new CubeBuilder();
-
-      
-
 
       builder.SetName("helloDataTable")
         .SetSourceMappings((sourcebuild) =>
@@ -26,11 +25,19 @@ namespace UnitTests
             .AddMapping("place", "place", "Country", "Region")
             .AddMapping("date", "Year", "Month", "Day");
         })
+        .AddDbConnection("LITE", dbbuilder =>
+        {
+          dbbuilder
+            .SetConnectionString(ConfigurationExtensions.GetConnectionString(externalConfig, "LITE"))
+            .SetProviderName("System.Data.SqlClient")
+            .SetDbFactory(SQLiteFactory.Instance);
+        })
         .AddDataSource(dsbuild =>
         {
           dsbuild.SetName("sales")
             .SetSourceType(DataSourceType.DataBase)
-            .SetDBConfig(dbBuild => {
+            .SetDBConfig(dbBuild =>
+            {
               dbBuild.SetConnection("LITE", "System.Data.SQLite")
               .SetQuery("SELECT category, gender, place, datetime([date]) as 'date', expenses, items FROM Sales");
             })
@@ -47,7 +54,8 @@ namespace UnitTests
             .SetSourceType(DataSourceType.DataBase)
             .AddField("id", typeof(int))
             .AddField("description", typeof(string))
-            .SetDBConfig(dbBuild => {
+            .SetDBConfig(dbBuild =>
+            {
               dbBuild.SetConnection("LITE", "System.Data.SQLite")
               .SetQuery("SELECT id, description FROM Categories");
             });
@@ -58,7 +66,8 @@ namespace UnitTests
             .SetSourceType(DataSourceType.DataBase)
             .AddField("id", typeof(int))
             .AddField("description", 1, typeof(string))
-            .SetDBConfig(dbBuild => {
+            .SetDBConfig(dbBuild =>
+            {
               dbBuild.SetConnection("LITE", "System.Data.SQLite")
               .SetQuery("SELECT id, description FROM Genders");
             });
@@ -73,7 +82,8 @@ namespace UnitTests
             .AddField("country", typeof(string))
             .AddField("idregion", typeof(int))
             .AddField("region", typeof(string))
-            .SetDBConfig(dbBuild => {
+            .SetDBConfig(dbBuild =>
+            {
               dbBuild.SetConnection("LITE", "System.Data.SQLite")
               .SetQuery("SELECT id, description, idcountry, country, idregion, region FROM Places");
             });
@@ -135,8 +145,6 @@ namespace UnitTests
     [Test]
     public void Setup_Cube_With_Only_SQLiteDB_Test()
     {
-      DbProviderFactories.RegisterFactory("System.Data.SqlClient", SQLiteFactory.Instance);
-
       var builder = GetCubeConfiguration();
       using (var cube = builder.Create<int>())
       {

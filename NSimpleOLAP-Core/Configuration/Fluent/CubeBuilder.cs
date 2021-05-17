@@ -13,6 +13,7 @@ namespace NSimpleOLAP.Configuration.Fluent
     private List<DataSourceBuilder> _datasourceconfigs;
     private MetaDataBuilder _metadataconfig;
     private CubeSourceBuilder _cubeSource;
+    private Dictionary<string, DatabaseConnectionBuilder> _dbBuilder;
     private CubeConfig _root;
 
     public CubeBuilder()
@@ -22,6 +23,7 @@ namespace NSimpleOLAP.Configuration.Fluent
       _datasourceconfigs = new List<DataSourceBuilder>();
       _metadataconfig = new MetaDataBuilder();
       _cubeSource = new CubeSourceBuilder();
+      _dbBuilder = new Dictionary<string, DatabaseConnectionBuilder>();
     }
 
     internal CubeBuilder(CubeConfig root)
@@ -65,6 +67,15 @@ namespace NSimpleOLAP.Configuration.Fluent
       return this;
     }
 
+    public CubeBuilder AddDbConnection(string name, Action<DatabaseConnectionBuilder> connectionBuilder)
+    {
+      var builder = new DatabaseConnectionBuilder(name);
+      connectionBuilder(builder);
+      _dbBuilder.Add(name, builder);
+
+      return this;
+    }
+
     internal CubeConfig CreateConfig()
     {
       CubeConfig cube = _root;
@@ -77,6 +88,9 @@ namespace NSimpleOLAP.Configuration.Fluent
 
       foreach (var item in _datasourceconfigs)
         cube.DataSources.Add(item.Create());
+
+      foreach (var item in _dbBuilder)
+        cube.Database.Add(item.Value.Create());
 
       return cube;
     }

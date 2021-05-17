@@ -9,6 +9,8 @@ namespace NSimpleOLAP.Data
   /// </summary>
   public class DefaultDataSource : IDataSource
   {
+    private readonly DatabaseConfig _dbConfig;
+
     public DefaultDataSource()
     {
     }
@@ -17,6 +19,11 @@ namespace NSimpleOLAP.Data
     {
       this.Config = config;
       this.Name = config.Name;
+    }
+
+    public DefaultDataSource(DataSourceConfig config, DatabaseConfig dbConfig):this(config)
+    {
+      _dbConfig = dbConfig;
     }
 
     public string Name
@@ -33,7 +40,7 @@ namespace NSimpleOLAP.Data
 
     public AbsReader GetReader()
     {
-      return AbsReader.Create(this.Config);
+      return AbsReader.Create(this.Config, _dbConfig);
     }
   }
 }

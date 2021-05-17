@@ -11,6 +11,7 @@ More on that later.
 ## Contents
 - [Quick Start](##Quick-Start)
 - [Configuring a Cube](Markdown/Configuration.md)
+- [Loading Data with Data Sources](Markdown/Datasources.md)
 
 ## Quick Start
 

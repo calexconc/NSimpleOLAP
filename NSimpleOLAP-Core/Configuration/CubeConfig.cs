@@ -28,6 +28,12 @@ namespace NSimpleOLAP.Configuration
       set;
     }
 
+    public DatabaseConfig Database
+    {
+      get;
+      set;
+    } = new DatabaseConfig();
+
     /// <summary>
     ///
     /// </summary>

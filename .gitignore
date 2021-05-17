@@ -21,3 +21,5 @@ NSimpleOLAP-Core/bin/*
 UnitTests-Core/bin/*
 UnitTests-Core/obj/*
 *.v2
+UnitTests-Core/UnitTests-Core.csproj.user
+UnitTests/UnitTests.csproj.user
