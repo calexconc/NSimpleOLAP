@@ -1,4 +1,5 @@
 ﻿using NSimpleOLAP.Query.Interfaces;
+using NSimpleOLAP.Common;
 using System;
 using System.Collections.Generic;
 
@@ -17,6 +18,8 @@ namespace NSimpleOLAP.Query
     protected Cube<T> cube;
 
     protected List<T> measures;
+
+    protected List<LinearSummaries> summaries;
 
     protected IQueryOrchestrator<T, IOutputCell<T>> queryOrchestrator;
 
@@ -46,6 +49,11 @@ namespace NSimpleOLAP.Query
     internal IPredicate<T> PredicateTree
     {
       get { return predicates; }
+    }
+
+    internal List<LinearSummaries> Summaries
+    {
+      get { return summaries; }
     }
 
     public IEnumerable<IOutputCell<T>> StreamCells()

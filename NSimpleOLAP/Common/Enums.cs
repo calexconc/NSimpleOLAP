@@ -18,11 +18,13 @@
 
   public enum OperationMode { OnDemand, PreAggregate }
 
-  public enum OutputCellType { DATA, COLUMN_LABEL, ROW_LABEL }
+  public enum OutputCellType { DATA, COLUMN_LABEL, ROW_LABEL, COLUMN_TOTAL, ROW_TOTAL }
 
   public enum OperationType { NONE = 0, SUM = 1, SUBTRACTION = 2, MULTIPLICATION = 3, DIVISION = 4, MIN = 5, MAX = 6, AVERAGE = 7, VALUE = 8 }
 
   public enum DateLevels { DATE = 0, DAY = 1 , MONTH_WITH_YEAR = 2, QUARTER = 3 , YEAR = 4, WEEK = 5, MONTH = 6 }
 
   public enum TimeLevels { TIME = 0, HOUR = 1, MINUTES = 2, SECONDS = 3 }
+
+  public enum LinearSummaries { COLUMN_TOTALS = 0, ROW_TOTALS = 1, COLUMN_BASE_TOTALS = 2, ROW_BASE_TOTALS = 3 }
 }
