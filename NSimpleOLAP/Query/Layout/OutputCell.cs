@@ -26,7 +26,8 @@ namespace NSimpleOLAP.Query.Layout
     {
       CellType = cellType;
 
-      if (CellType == OutputCellType.COLUMN_LABEL)
+      if (CellType == OutputCellType.COLUMN_LABEL ||
+        CellType == OutputCellType.ROW_TOTAL)
       {
         XCoords = coords;
         Column = descriptors;
@@ -135,6 +136,11 @@ namespace NSimpleOLAP.Query.Layout
     internal void Add(string measure, object value)
     {
       _values.Add(measure, value);
+    }
+
+    internal bool ContainsKey(string measure)
+    {
+      return _values.ContainsKey(measure);
     }
 
     IEnumerator IEnumerable.GetEnumerator()

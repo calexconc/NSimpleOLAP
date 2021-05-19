@@ -58,7 +58,6 @@ namespace NSimpleOLAP.Common
   internal class KeysBaseEqualityComparer<T> : IEqualityComparer<KeyValuePair<T, T>[]>
     where T : struct, IComparable
   {
-    private AllKeyComparer<T> _allKeyComparer = new AllKeyComparer<T>();
 
     public bool Equals(KeyValuePair<T, T>[] x, KeyValuePair<T, T>[] y)
     {
@@ -84,6 +83,40 @@ namespace NSimpleOLAP.Common
       var results = cellCoords
         .Join(scoords, x => x.Key, y => y.Key, (x, y) => new { x, y })
         .Where(x => x.x.Value.Equals(x.y.Value))
+        .Count();
+
+      if (results == scoords.Length)
+        ret = true;
+
+      return ret;
+    }
+  }
+
+  internal class KeysEqualityComparer<T> : IEqualityComparer<KeyValuePair<T, T>[]>
+    where T : struct, IComparable
+  {
+
+    public bool Equals(KeyValuePair<T, T>[] x, KeyValuePair<T, T>[] y)
+    {
+      return ComparePairs(x, y);
+    }
+
+    public int GetHashCode(KeyValuePair<T, T>[] obj)
+    {
+      var first = obj.FirstOrDefault();
+      var result = first.Key.GetHashCode();
+
+      foreach (var item in obj.Skip(1))
+        result ^= item.Key.GetHashCode();
+
+      return result;
+    }
+
+    private bool ComparePairs(KeyValuePair<T, T>[] cellCoords, KeyValuePair<T, T>[] scoords)
+    {
+      var ret = false;
+      var results = cellCoords
+        .Join(scoords, x => x.Key, y => y.Key, (x, y) => new { x, y })
         .Count();
 
       if (results == scoords.Length)

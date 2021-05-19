@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NSimpleOLAP.Common.Utils;
+using NSimpleOLAP.CubeExpressions;
 
 namespace NSimpleOLAP.Query.Molap
 {
@@ -14,6 +15,7 @@ namespace NSimpleOLAP.Query.Molap
     private Cube<T> _cube;
     private NamespaceResolver<T> _resolver;
     private AllKeysComparer<T> _allKeysComparer;
+    private KeysEqualityComparer<T> _keysEqualityComparer;
     private KeysBaseEqualityComparer<T> _pairsEqualityComparer;
 
     public MolapQueryOrchestrator(Cube<T> cube)
@@ -22,6 +24,7 @@ namespace NSimpleOLAP.Query.Molap
       _resolver = new NamespaceResolver<T>(cube);
       _allKeysComparer = new AllKeysComparer<T>();
       _pairsEqualityComparer = new KeysBaseEqualityComparer<T>();
+      _keysEqualityComparer = new KeysEqualityComparer<T>();
     }
 
     public IEnumerable<IOutputCell<T>> GetByCells(Query<T> query)
@@ -122,12 +125,15 @@ namespace NSimpleOLAP.Query.Molap
       var ocells = cells.OrderBy(x => x.YCoords, _allKeysComparer).ToArray();
       var colsSegments = ocells.Select(x => x.XCoords).Distinct(_pairsEqualityComparer).ToArray();
       var rowSegments = ocells.Select(x => x.YCoords).Distinct(_pairsEqualityComparer).ToArray();
+      var hasRowTotals = query.Summaries.Contains(LinearSummaries.ROW_TOTALS);
+
+      IOutputCell<T>[] columns = null;
 
       if (query.Axis.HasColumns)
       {
-        var columns = GetColumnCells(colsSegments, query);
+        columns = GetColumnCells(colsSegments, query, hasRowTotals).ToArray();
 
-        yield return columns.ToArray();
+        yield return columns;
       }
 
       var index = 0;
@@ -136,7 +142,7 @@ namespace NSimpleOLAP.Query.Molap
       {
         foreach (var row in rowSegments)
         {
-          var values = new IOutputCell<T>[colsSegments.Length + 1];
+          var values = new IOutputCell<T>[columns.Length];
 
           values[0] = GetRowCell(row, query);
 
@@ -159,13 +165,16 @@ namespace NSimpleOLAP.Query.Molap
             }
           }
 
+          if (hasRowTotals)
+            CalculateRowTotals(columns, values);
+
           yield return values;
         }
       }
 
       if (query.Axis.HasColumns && !query.Axis.HasRows)
       {
-        var values = new IOutputCell<T>[colsSegments.Length + 1];
+        var values = new IOutputCell<T>[columns.Length];
 
         values[0] = GetMeasureCell(query.MeasuresOrMetrics, OutputCellType.ROW_LABEL);
 
@@ -183,6 +192,9 @@ namespace NSimpleOLAP.Query.Molap
             index++;
           }
         }
+
+        if (hasRowTotals)
+          CalculateRowTotals(columns, values);
 
         yield return values;
       }
@@ -214,29 +226,104 @@ namespace NSimpleOLAP.Query.Molap
       }
     }
 
-    private IEnumerable<IOutputCell<T>> GetColumnCells(IEnumerable<KeyValuePair<T, T>[]> pairs, Query<T> query)
+    private void CalculateRowTotals(IOutputCell<T>[] columns, IOutputCell<T>[] values)
+    {
+      var totals = columns.Select((x, i) => new { Total = x, Index = i })
+              .Where(x => x.Total.CellType == OutputCellType.ROW_TOTAL);
+
+      foreach (var total in totals)
+      {
+        var vcells = values
+          .Where(x => x != null && _keysEqualityComparer.Equals(x.XCoords, total.Total.XCoords))
+          .ToArray();
+
+        if (vcells.Length > 0)
+        {
+          var outputCell = new OutputCell<T>(total.Total.XCoords, total.Total.XCoords, vcells[0].YCoords);
+          var calculatedValues = new Dictionary<string, object>();
+          values[total.Index] = outputCell;
+
+          foreach (var xcell in vcells)
+          {
+            foreach (var xvalue in xcell)
+            {
+              if (_cube.Schema.Measures[xvalue.Key].DataType.IsValueType)
+              {
+                if (!calculatedValues.ContainsKey(xvalue.Key)
+                  && xvalue.Value != null)
+                  calculatedValues.Add(xvalue.Key, xvalue.Value);
+                else if (xvalue.Value != null)
+                  calculatedValues[xvalue.Key] = ((ValueType)calculatedValues[xvalue.Key]).Sum((ValueType)xvalue.Value);
+              }
+            }
+          }
+
+          foreach (var item in calculatedValues)
+            outputCell.Add(item.Key, item.Value);
+        }
+      }
+    }
+
+    private IEnumerable<IOutputCell<T>> GetColumnCells(IEnumerable<KeyValuePair<T, T>[]> pairs, Query<T> query, bool hasRowTotals)
     {
       var schemaDims = query.Cube.Schema.Dimensions;
       var defaultValue = default(T);
 
       yield return null;
 
+      KeyValuePair<T, T>[] currentRowTotal = null;
+      OutputCell<T> currentRowTotalCell = null;
+      var rowTotalsList = new List<OutputCell<T>>();
+
       foreach (var col in pairs)
       {
         var descriptors = new List<KeyValuePair<string, string>>();
+        var rowTotals = new List<KeyValuePair<T, T>>();
 
         foreach (var item in col)
         {
           if (!item.Value.Equals(defaultValue))
           {
             var value = new KeyValuePair<string, string>(schemaDims[item.Key].Name, schemaDims[item.Key].Members[item.Value].Name);
+            
 
             descriptors.Add(value);
+
+            if (hasRowTotals)
+            {
+              rowTotals.Add(new KeyValuePair<T, T>(item.Key, defaultValue));
+            }
           }
-          
         }
 
         yield return new OutputCell<T>(col, descriptors.ToArray(), OutputCellType.COLUMN_LABEL);
+
+        if (hasRowTotals)
+        {
+          if (currentRowTotal == null)
+          {
+            currentRowTotal = rowTotals.ToArray();
+            currentRowTotalCell = new OutputCell<T>(currentRowTotal, descriptors.Select(x => new KeyValuePair<string, string>(x.Key, "")).ToArray(), OutputCellType.ROW_TOTAL);
+
+            rowTotalsList.Add(currentRowTotalCell);
+          }
+          else
+          {
+            if (_allKeysComparer.Compare(currentRowTotal, rowTotals.ToArray()) != 0)
+            {
+              currentRowTotal = rowTotals.ToArray();
+              currentRowTotalCell = new OutputCell<T>(currentRowTotal, descriptors.Select(x => new KeyValuePair<string, string>(x.Key, "")).ToArray(), OutputCellType.ROW_TOTAL);
+
+              rowTotalsList.Add(currentRowTotalCell);
+            }
+          }
+        }
+      }
+
+      if (hasRowTotals)
+      {
+        foreach (var item in rowTotalsList)
+          yield return item;
       }
     }
 
