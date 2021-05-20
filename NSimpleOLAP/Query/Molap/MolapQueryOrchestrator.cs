@@ -1,11 +1,11 @@
 ﻿using NSimpleOLAP.Common;
+using NSimpleOLAP.Common.Utils;
+using NSimpleOLAP.CubeExpressions;
 using NSimpleOLAP.Query.Interfaces;
 using NSimpleOLAP.Query.Layout;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NSimpleOLAP.Common.Utils;
-using NSimpleOLAP.CubeExpressions;
 
 namespace NSimpleOLAP.Query.Molap
 {
@@ -105,9 +105,31 @@ namespace NSimpleOLAP.Query.Molap
       }
     }
 
+    private IOutputCell<T> GetCell(Query<T> query, KeyValuePair<T, T>[] coords, KeyValuePair<T, T>[] xTuples, KeyValuePair<T, T>[] yTuples)
+    {
+      var cell = _cube.Storage.GetCell(coords);
+
+      return Map(cell, coords, xTuples, yTuples, query);
+    }
+
     private IOutputCell<T> Map(Cell<T> cell, KeyTuplePairs<T> tuples, Query<T> query)
     {
       var ocell = new OutputCell<T>(cell.Coords, tuples.XAnchorTuple, tuples.YAnchorTuple);
+
+      foreach (var item in query.MeasuresOrMetrics)
+      {
+        var dataItem = _resolver.GetDataItemInfo(item);
+        var value = cell.Values[item];
+
+        ocell.Add(dataItem.Name, value);
+      }
+
+      return ocell;
+    }
+
+    private IOutputCell<T> Map(Cell<T> cell, KeyValuePair<T, T>[] coords, KeyValuePair<T,T>[] xTuples, KeyValuePair<T, T>[] yTuples, Query<T> query)
+    {
+      var ocell = new OutputCell<T>(coords, xTuples, yTuples);
 
       foreach (var item in query.MeasuresOrMetrics)
       {
@@ -125,27 +147,22 @@ namespace NSimpleOLAP.Query.Molap
       var ocells = cells.OrderBy(x => x.YCoords, _allKeysComparer).ToArray();
       var colsSegments = ocells.Select(x => x.XCoords).Distinct(_pairsEqualityComparer).ToArray();
       var rowSegments = ocells.Select(x => x.YCoords).Distinct(_pairsEqualityComparer).ToArray();
-      var hasRowTotals = query.Summaries.Contains(LinearSummaries.ROW_TOTALS);
-      var hasColumnTotals = query.Summaries.Contains(LinearSummaries.COLUMN_TOTALS);
       IOutputCell<T>[] columnTotals = null;
-
       IOutputCell<T>[] columns = null;
 
       if (query.Axis.HasColumns)
       {
-        columns = GetColumnCells(colsSegments, query, hasRowTotals).ToArray();
+        columns = GetColumnCells(colsSegments, query, query.HasRowTotals).ToArray();
 
-        if (hasColumnTotals)
+        if (query.HasColumnTotals)
         {
           columnTotals = new IOutputCell<T>[columns.Length];
           columnTotals[0] = new OutputCell<T>(new KeyValuePair<T, T>[] { }, new KeyValuePair<string, string>[] { }, OutputCellType.ROW_LABEL);
 
-          for (var i = 1; i <  columns.Length; i++)
-          {
-            columnTotals[i] = new OutputCell<T>(columns[i].Coords, columns[i].Column, OutputCellType.COLUMN_TOTAL);
-          }
+          for (var i = 1; i < columns.Length; i++)
+            columnTotals[i] = new OutputCell<T>(columns[i].Coords, columns[i].XCoords, columns[i].YCoords, columns[i].Column, OutputCellType.COLUMN_TOTAL);
         }
-        
+
         yield return columns;
       }
 
@@ -178,16 +195,16 @@ namespace NSimpleOLAP.Query.Molap
             }
           }
 
-          if (hasRowTotals)
+          if (query.HasRowTotals)
             CalculateRowTotals(columns, values);
 
           yield return values;
 
-          if (hasColumnTotals)
+          if (query.HasColumnTotals)
             CalculateColumnTotals(columnTotals, values);
         }
 
-        if (hasColumnTotals)
+        if (query.HasColumnTotals)
           yield return columnTotals;
       }
 
@@ -212,7 +229,7 @@ namespace NSimpleOLAP.Query.Molap
           }
         }
 
-        if (hasRowTotals)
+        if (query.HasRowTotals)
           CalculateRowTotals(columns, values);
 
         yield return values;
