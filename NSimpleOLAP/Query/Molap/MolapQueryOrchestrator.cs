@@ -126,6 +126,8 @@ namespace NSimpleOLAP.Query.Molap
       var colsSegments = ocells.Select(x => x.XCoords).Distinct(_pairsEqualityComparer).ToArray();
       var rowSegments = ocells.Select(x => x.YCoords).Distinct(_pairsEqualityComparer).ToArray();
       var hasRowTotals = query.Summaries.Contains(LinearSummaries.ROW_TOTALS);
+      var hasColumnTotals = query.Summaries.Contains(LinearSummaries.COLUMN_TOTALS);
+      IOutputCell<T>[] columnTotals = null;
 
       IOutputCell<T>[] columns = null;
 
@@ -133,6 +135,17 @@ namespace NSimpleOLAP.Query.Molap
       {
         columns = GetColumnCells(colsSegments, query, hasRowTotals).ToArray();
 
+        if (hasColumnTotals)
+        {
+          columnTotals = new IOutputCell<T>[columns.Length];
+          columnTotals[0] = new OutputCell<T>(new KeyValuePair<T, T>[] { }, new KeyValuePair<string, string>[] { }, OutputCellType.ROW_LABEL);
+
+          for (var i = 1; i <  columns.Length; i++)
+          {
+            columnTotals[i] = new OutputCell<T>(columns[i].Coords, columns[i].Column, OutputCellType.COLUMN_TOTAL);
+          }
+        }
+        
         yield return columns;
       }
 
@@ -169,7 +182,13 @@ namespace NSimpleOLAP.Query.Molap
             CalculateRowTotals(columns, values);
 
           yield return values;
+
+          if (hasColumnTotals)
+            CalculateColumnTotals(columnTotals, values);
         }
+
+        if (hasColumnTotals)
+          yield return columnTotals;
       }
 
       if (query.Axis.HasColumns && !query.Axis.HasRows)
@@ -229,12 +248,13 @@ namespace NSimpleOLAP.Query.Molap
     private void CalculateRowTotals(IOutputCell<T>[] columns, IOutputCell<T>[] values)
     {
       var totals = columns.Select((x, i) => new { Total = x, Index = i })
-              .Where(x => x.Total.CellType == OutputCellType.ROW_TOTAL);
+              .Where(x => x.Total != null && x.Total.CellType == OutputCellType.ROW_TOTAL);
 
       foreach (var total in totals)
       {
         var vcells = values
-          .Where(x => x != null && _keysEqualityComparer.Equals(x.XCoords, total.Total.XCoords))
+          .Where(x => x != null && x.CellType != OutputCellType.ROW_LABEL)
+          .Where(x => _keysEqualityComparer.Equals(x.XCoords, total.Total.XCoords))
           .ToArray();
 
         if (vcells.Length > 0)
@@ -264,6 +284,29 @@ namespace NSimpleOLAP.Query.Molap
       }
     }
 
+    private void CalculateColumnTotals(IOutputCell<T>[] columnTotals, IOutputCell<T>[] values)
+    {
+      for (var i = 1; i < values.Length; i++)
+      {
+        var current = values[i];
+        var currentTotal = (OutputCell<T>)columnTotals[i];
+
+        if (current != null)
+        {
+          foreach (var item in current)
+          {
+            if (item.Value != null)
+            {
+              if (!currentTotal.ContainsKey(item.Key))
+                currentTotal.Add(item.Key, item.Value);
+              else
+                currentTotal[item.Key] = ((ValueType)currentTotal[item.Key]).Sum((ValueType)item.Value);
+            }
+          }
+        }
+      }
+    }
+
     private IEnumerable<IOutputCell<T>> GetColumnCells(IEnumerable<KeyValuePair<T, T>[]> pairs, Query<T> query, bool hasRowTotals)
     {
       var schemaDims = query.Cube.Schema.Dimensions;
@@ -285,7 +328,6 @@ namespace NSimpleOLAP.Query.Molap
           if (!item.Value.Equals(defaultValue))
           {
             var value = new KeyValuePair<string, string>(schemaDims[item.Key].Name, schemaDims[item.Key].Members[item.Value].Name);
-            
 
             descriptors.Add(value);
 

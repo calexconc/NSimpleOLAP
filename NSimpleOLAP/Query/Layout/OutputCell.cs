@@ -27,11 +27,15 @@ namespace NSimpleOLAP.Query.Layout
       CellType = cellType;
 
       if (CellType == OutputCellType.COLUMN_LABEL ||
-        CellType == OutputCellType.ROW_TOTAL)
+        CellType == OutputCellType.ROW_TOTAL
+        || CellType == OutputCellType.COLUMN_TOTAL)
       {
         XCoords = coords;
         Column = descriptors;
       }
+
+      if (CellType == OutputCellType.COLUMN_TOTAL) // to do check inits
+        _values = new Dictionary<string, object>();
 
       if (CellType == OutputCellType.ROW_LABEL)
       {
@@ -87,7 +91,18 @@ namespace NSimpleOLAP.Query.Layout
       private set;
     }
 
-    public object this[string key] => _values[key];
+    public object this[string key]
+    {
+      get
+      {
+        return _values[key];
+      }
+      internal set
+      {
+        _values[key] = value;
+      }
+    }
+
 
     public object this[int key]
     {
