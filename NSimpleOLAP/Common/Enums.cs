@@ -18,7 +18,7 @@
 
   public enum OperationMode { OnDemand, PreAggregate }
 
-  public enum OutputCellType { DATA, COLUMN_LABEL, ROW_LABEL, COLUMN_TOTAL, ROW_TOTAL }
+  public enum OutputCellType { DATA, COLUMN_LABEL, ROW_LABEL, COLUMN_TOTAL, ROW_TOTAL, COLUMN_BASE_TOTAL, ROW_BASE_TOTAL }
 
   public enum OperationType { NONE = 0, SUM = 1, SUBTRACTION = 2, MULTIPLICATION = 3, DIVISION = 4, MIN = 5, MAX = 6, AVERAGE = 7, VALUE = 8 }
 

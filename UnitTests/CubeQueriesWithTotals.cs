@@ -91,6 +91,43 @@ namespace UnitTests
     }
 
 
+    [Test]
+    public void Query_StreamRows_With_RowBaseTotals_Cell_Test()
+    {
+      var queryBuilder = cube.BuildQuery()
+        .OnRows("sex.All")
+        .OnColumns("category.shoes")
+        .AddMeasuresOrMetrics("quantity")
+        .GetBaseRowTotals();
 
+      var query = queryBuilder.Create();
+      var result = query.StreamRows().ToList();
+
+      var valuesCol1 = result.Skip(1).Select(x => (KeyValuePair<string, object>)x[1][0]).ToArray();
+      var valuesCol2 = result.Skip(1).Select(x => (KeyValuePair<string, object>)x[2][0]).ToArray();
+      Assert.IsTrue(result.Count == 4);
+      Assert.IsTrue((int)valuesCol1[0].Value <= (int)valuesCol2[0].Value);
+    }
+
+    [Test]
+    public void Query_StreamRows_With_ColumnBaseTotals_Cell_Test()
+    {
+      var queryBuilder = cube.BuildQuery()
+        .OnRows("sex.All")
+        .OnColumns("category.All")
+        .AddMeasuresOrMetrics("quantity")
+        .GetColumnTotals()
+        .GetBaseColumnTotals();
+
+      var query = queryBuilder.Create();
+      var result = query.StreamRows().ToList();
+
+      result.RenderInConsole();
+
+      var valuesRow1 = result[4].Skip(1).Select(x => (KeyValuePair<string, object>)x[0]).Select(x => (int) x.Value).ToArray();
+      var valuesRow2 = result[5].Skip(1).Select(x => (KeyValuePair<string, object>)x[0]).Select(x => (int)x.Value).ToArray();
+      Assert.IsTrue(result.Count == 6);
+      CollectionAssert.AreEqual(valuesRow1, valuesRow2);
+    }
   }
 }
