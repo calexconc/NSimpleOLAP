@@ -22,11 +22,27 @@ namespace NSimpleOLAP.Query.Layout
       Init();
     }
 
+    public OutputCell(KeyValuePair<T, T>[] coords, KeyValuePair<T, T>[] xcoords, KeyValuePair<T, T>[] ycoords, KeyValuePair<string, string>[] descriptors, OutputCellType cellType)
+    {
+      _values = new Dictionary<string, object>();
+      CellType = cellType;
+      Coords = coords;
+      XCoords = xcoords;
+      YCoords = ycoords;
+
+      if (CellType == OutputCellType.ROW_TOTAL
+        || CellType == OutputCellType.COLUMN_TOTAL)
+      {
+        Column = descriptors;
+      }
+    }
+
     public OutputCell(KeyValuePair<T, T>[] coords, KeyValuePair<string, string>[] descriptors, OutputCellType cellType)
     {
       CellType = cellType;
 
-      if (CellType == OutputCellType.COLUMN_LABEL)
+      if (CellType == OutputCellType.COLUMN_LABEL ||
+        CellType == OutputCellType.ROW_TOTAL)
       {
         XCoords = coords;
         Column = descriptors;
@@ -86,7 +102,17 @@ namespace NSimpleOLAP.Query.Layout
       private set;
     }
 
-    public object this[string key] => _values[key];
+    public object this[string key]
+    {
+      get
+      {
+        return _values[key];
+      }
+      internal set
+      {
+        _values[key] = value;
+      }
+    }
 
     public object this[int key]
     {
@@ -135,6 +161,11 @@ namespace NSimpleOLAP.Query.Layout
     internal void Add(string measure, object value)
     {
       _values.Add(measure, value);
+    }
+
+    internal bool ContainsKey(string measure)
+    {
+      return _values.ContainsKey(measure);
     }
 
     IEnumerator IEnumerable.GetEnumerator()
