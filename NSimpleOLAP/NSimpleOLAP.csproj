@@ -183,6 +183,20 @@
     <Compile Include="Data\Readers\ObjectMapperReader.cs" />
     <Compile Include="Data\Readers\TransformerReader.cs" />
     <Compile Include="Data\Transformers\MemberIntervalTransformer.cs" />
+    <Compile Include="Parsers\Collections\BinaryNode.cs" />
+    <Compile Include="Parsers\Collections\BinaryTree.cs" />
+    <Compile Include="Parsers\ParseException.cs" />
+    <Compile Include="Parsers\Tokens\BoolToken.cs" />
+    <Compile Include="Parsers\Tokens\ConstantToken.cs" />
+    <Compile Include="Parsers\Tokens\EndParToken.cs" />
+    <Compile Include="Parsers\Tokens\EofToken.cs" />
+    <Compile Include="Parsers\Tokens\NumToken.cs" />
+    <Compile Include="Parsers\Tokens\OperatorToken.cs" />
+    <Compile Include="Parsers\Tokens\ParToken.cs" />
+    <Compile Include="Parsers\Tokens\StartParToken.cs" />
+    <Compile Include="Parsers\Tokens\SubToken.cs" />
+    <Compile Include="Parsers\Tokens\Token.cs" />
+    <Compile Include="Parsers\Tokens\Tokenizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query\Builder\AndPredicateBuilder.cs" />
     <Compile Include="Query\Axis.cs" />
@@ -292,9 +306,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Parsers\Expressions\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="license.txt" />
   </ItemGroup>
