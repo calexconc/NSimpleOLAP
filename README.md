@@ -12,6 +12,7 @@ More on that later.
 - [Quick Start](##Quick-Start)
 - [Configuring a Cube](Markdown/Configuration.md)
 - [Loading Data with Data Sources](Markdown/Datasources.md)
+- [Working with Dimensions](Markdown/DimensionsAndMeasures.md)
 
 ## Quick Start
 
