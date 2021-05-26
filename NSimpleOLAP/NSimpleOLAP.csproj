@@ -187,6 +187,7 @@
     <Compile Include="Parsers\Collections\BinaryTree.cs" />
     <Compile Include="Parsers\MetricsExpressionComposer.cs" />
     <Compile Include="Parsers\ParseException.cs" />
+    <Compile Include="Parsers\ParserExtensions.cs" />
     <Compile Include="Parsers\QueryWhereExpressionComposer.cs" />
     <Compile Include="Parsers\Tokens\BoolToken.cs" />
     <Compile Include="Parsers\Tokens\ConstantToken.cs" />

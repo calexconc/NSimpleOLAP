@@ -71,6 +71,12 @@ namespace NSimpleOLAP.CubeExpressions.Builder
       builder(_leftNodeBuilder);
     }
 
+    internal void Sum(ExpressionElementsBuilder<T> builder)
+    {
+      _operation = OperationType.SUM;
+      _leftNodeBuilder = builder;
+    }
+
     public void Subtract<V>(V value)
       where V : struct
     {
@@ -86,6 +92,12 @@ namespace NSimpleOLAP.CubeExpressions.Builder
       builder(_leftNodeBuilder);
     }
 
+    internal void Subtract(ExpressionElementsBuilder<T> builder)
+    {
+      _operation = OperationType.SUBTRACTION;
+      _leftNodeBuilder = builder;
+    }
+
     public void Multiply<V>(V value)
       where V : struct
     {
@@ -99,6 +111,12 @@ namespace NSimpleOLAP.CubeExpressions.Builder
       _leftNodeBuilder = new ExpressionElementsBuilder<T>(_resolver);
 
       builder(_leftNodeBuilder);
+    }
+
+    internal void Multiply(ExpressionElementsBuilder<T> builder)
+    {
+      _operation = OperationType.MULTIPLICATION;
+      _leftNodeBuilder = builder;
     }
 
     public void Divide<V>(V value)
@@ -119,6 +137,12 @@ namespace NSimpleOLAP.CubeExpressions.Builder
       _leftNodeBuilder = new ExpressionElementsBuilder<T>(_resolver);
 
       builder(_leftNodeBuilder);
+    }
+
+    internal void Divide(ExpressionElementsBuilder<T> builder)
+    {
+      _operation = OperationType.DIVISION;
+      _leftNodeBuilder = builder;
     }
 
     public void Average()

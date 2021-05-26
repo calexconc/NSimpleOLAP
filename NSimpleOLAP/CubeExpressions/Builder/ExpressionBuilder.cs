@@ -23,6 +23,13 @@ namespace NSimpleOLAP.CubeExpressions.Builder
       expression(_expressionRoot);
     }
 
+    internal ExpressionElementsBuilder<T> SetElementsBuilder()
+    {
+      _expressionRoot = new ExpressionElementsBuilder<T>(_resolver);
+
+      return _expressionRoot;
+    }
+
     internal Type ReturnType
     {
       get

@@ -13,6 +13,7 @@ More on that later.
 - [Configuring a Cube](Markdown/Configuration.md)
 - [Loading Data with Data Sources](Markdown/Datasources.md)
 - [Working with Dimensions](Markdown/DimensionsAndMeasures.md)
+- [Choosing Measures](Markdown/DimensionsAndMeasures.md##Choosing-Measures)
 
 ## Quick Start
 

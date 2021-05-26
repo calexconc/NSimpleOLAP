@@ -17,7 +17,7 @@ namespace NSimpleOLAP.Configuration.Fluent
 
     #region public methods
 
-    public MetricBuilder SetName(string name)
+    internal MetricBuilder SetName(string name)
     {
       _element.Name = name;
       return this;

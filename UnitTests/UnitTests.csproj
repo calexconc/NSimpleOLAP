@@ -86,6 +86,7 @@
   <ItemGroup>
     <Compile Include="ConfigTests.cs" />
     <Compile Include="CubeExpressionMetricsExecutionTests.cs" />
+    <Compile Include="CubeTextExpressionMetricsSetupTests.cs" />
     <Compile Include="CubeExpressionMetricsSetupTests.cs" />
     <Compile Include="CubeInitializationTests.cs" />
     <Compile Include="CubeInitializationWithDimensionTransformersTests.cs" />
