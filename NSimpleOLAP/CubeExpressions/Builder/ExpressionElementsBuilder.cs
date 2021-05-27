@@ -43,12 +43,25 @@ namespace NSimpleOLAP.CubeExpressions.Builder
       return _node;
     }
 
+    public ExpressionNodeBuilder<T> Set(ValueType value)
+    {
+      _node = new ExpressionNodeBuilder<T>(value);
+      _type = _node.ReturnType;
+
+      return _node;
+    }
+
     internal Type ReturnType
     {
       get
       {
         return _type;
       }
+    }
+
+    internal ExpressionNodeBuilder<T> Node
+    {
+      get { return _node; }
     }
 
     internal Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> Create()

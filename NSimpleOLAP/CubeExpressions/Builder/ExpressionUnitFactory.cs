@@ -11,6 +11,30 @@ namespace NSimpleOLAP.CubeExpressions.Builder
     public static Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> Build<T>(ExpressionNodeBuilder<T> nodeBuilder)
       where T : struct, IComparable
     {
+      if (nodeBuilder.IsListeral)
+      {
+        switch (nodeBuilder.Operation)
+        {
+          case OperationType.SUM:
+            return Sum<T>(nodeBuilder.ScalarValue, nodeBuilder.RootValue);
+
+          case OperationType.SUBTRACTION:
+            return Subtraction<T>(nodeBuilder.ScalarValue, nodeBuilder.RootValue);
+
+          case OperationType.MULTIPLICATION:
+            return Multiplication<T>(nodeBuilder.ScalarValue, nodeBuilder.RootValue);
+
+          case OperationType.DIVISION:
+            return Division<T>(nodeBuilder.ScalarValue, nodeBuilder.RootValue);
+
+          case OperationType.VALUE:
+            return Value<T>(nodeBuilder.RootValue);
+
+          default:
+            throw new Exception("Operation is not supported.");
+        }
+      }
+
       switch (nodeBuilder.Operation)
       {
         case OperationType.SUM:
@@ -45,6 +69,29 @@ namespace NSimpleOLAP.CubeExpressions.Builder
     public static Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> Build<T>(ExpressionNodeBuilder<T> nodeBuilder, Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> functor)
       where T : struct, IComparable
     {
+
+      if (nodeBuilder.IsListeral)
+      {
+        // to do extra functions
+        switch (nodeBuilder.Operation)
+        {
+          case OperationType.SUM:
+            return Sum<T>(functor, nodeBuilder.RootValue);
+
+          case OperationType.SUBTRACTION:
+            return Subtraction<T>(functor, nodeBuilder.RootValue);
+
+          case OperationType.MULTIPLICATION:
+            return Multiplication<T>(functor, nodeBuilder.RootValue);
+
+          case OperationType.DIVISION:
+            return Division<T>(functor, nodeBuilder.RootValue);
+
+          default:
+            throw new Exception("Operation is not supported.");
+        }
+      }
+
       // to do extra functions
       switch (nodeBuilder.Operation)
       {
@@ -89,6 +136,23 @@ namespace NSimpleOLAP.CubeExpressions.Builder
       return functor;
     }
 
+    private static Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> Sum<T>(Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> infunctor, ValueType value) where T : struct, IComparable
+    {
+      Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> functor = x =>
+      {
+        var cxtResult = infunctor(x);
+
+        if (cxtResult.Result != null && cxtResult.Result is ValueType) // change null hanndling by config
+        {
+          x.Result = value.Sum((ValueType)cxtResult.Result);
+        }
+
+        return x;
+      };
+
+      return functor;
+    }
+
     private static Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> Sum<T>(ValueType value, Tuple<T, List<KeyValuePair<T, T>[]>> picker) where T : struct, IComparable
     {
       Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> functor = x =>
@@ -108,6 +172,18 @@ namespace NSimpleOLAP.CubeExpressions.Builder
       return functor;
     }
 
+    private static Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> Sum<T>(ValueType value, ValueType value2) where T : struct, IComparable
+    {
+      Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> functor = x =>
+      {
+        x.Result = value2.Sum(value);
+
+        return x;
+      };
+
+      return functor;
+    }
+
     private static Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> Value<T>(Tuple<T, List<KeyValuePair<T, T>[]>> picker) where T : struct, IComparable
     {
       Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> functor = x =>
@@ -120,6 +196,18 @@ namespace NSimpleOLAP.CubeExpressions.Builder
 
           x.Result = measureValue;
         }
+
+        return x;
+      };
+
+      return functor;
+    }
+
+    private static Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> Value<T>(ValueType value) where T : struct, IComparable
+    {
+      Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> functor = x =>
+      {
+        x.Result = value;
 
         return x;
       };
@@ -149,6 +237,23 @@ namespace NSimpleOLAP.CubeExpressions.Builder
       return functor;
     }
 
+    private static Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> Subtraction<T>(Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> infunctor, ValueType value) where T : struct, IComparable
+    {
+      Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> functor = x =>
+      {
+        var cxtResult = infunctor(x);
+
+        if (cxtResult.Result != null && cxtResult.Result is ValueType) // change null hanndling by config
+        {
+          x.Result = value.Subtraction((ValueType)cxtResult.Result);
+        }
+
+        return x;
+      };
+
+      return functor;
+    }
+
     private static Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> Subtraction<T>(ValueType value, Tuple<T, List<KeyValuePair<T, T>[]>> picker) where T : struct, IComparable
     {
       Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> functor = x =>
@@ -161,6 +266,18 @@ namespace NSimpleOLAP.CubeExpressions.Builder
 
           x.Result = measureValue.Subtraction(value);
         }
+
+        return x;
+      };
+
+      return functor;
+    }
+
+    private static Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> Subtraction<T>(ValueType value, ValueType value2) where T : struct, IComparable
+    {
+      Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> functor = x =>
+      {
+        x.Result = value2.Subtraction(value);
 
         return x;
       };
@@ -190,6 +307,23 @@ namespace NSimpleOLAP.CubeExpressions.Builder
       return functor;
     }
 
+    private static Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> Multiplication<T>(Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> infunctor, ValueType value) where T : struct, IComparable
+    {
+      Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> functor = x =>
+      {
+        var cxtResult = infunctor(x);
+
+        if (cxtResult.Result != null && cxtResult.Result is ValueType) // change null hanndling by config
+        {
+          x.Result = value.Multiplication((ValueType)cxtResult.Result);
+        }
+
+        return x;
+      };
+
+      return functor;
+    }
+
     private static Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> Multiplication<T>(ValueType value, Tuple<T, List<KeyValuePair<T, T>[]>> picker) where T : struct, IComparable
     {
       Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> functor = x =>
@@ -202,6 +336,18 @@ namespace NSimpleOLAP.CubeExpressions.Builder
 
           x.Result = measureValue.Multiplication(value);
         }
+
+        return x;
+      };
+
+      return functor;
+    }
+
+    private static Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> Multiplication<T>(ValueType value, ValueType value2) where T : struct, IComparable
+    {
+      Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> functor = x =>
+      {
+        x.Result = value2.Multiplication(value);
 
         return x;
       };
@@ -229,6 +375,18 @@ namespace NSimpleOLAP.CubeExpressions.Builder
       return functor;
     }
 
+    private static Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> Division<T>(ValueType value, ValueType value2) where T : struct, IComparable
+    {
+      Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> functor = x =>
+      {
+        x.Result = value2.Division(value);
+
+        return x;
+      };
+
+      return functor;
+    }
+
     private static Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> Division<T>(Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> infunctor, Tuple<T, List<KeyValuePair<T, T>[]>> picker) where T : struct, IComparable
     {
       Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> functor = x =>
@@ -245,6 +403,25 @@ namespace NSimpleOLAP.CubeExpressions.Builder
           {
             x.Result = measureValue.Division((ValueType)cxtResult.Result);
           }
+        }
+
+        return x;
+      };
+
+      return functor;
+    }
+
+    private static Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> Division<T>(Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> infunctor, ValueType value) where T : struct, IComparable
+    {
+      Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> functor = x =>
+      {
+        var cxtResult = infunctor(x);
+
+        if (cxtResult.Result != null
+          && cxtResult.Result is ValueType
+          && !((ValueType)cxtResult.Result).IsZero()) // change null hanndling by config
+        {
+          x.Result = value.Division((ValueType)cxtResult.Result);
         }
 
         return x;

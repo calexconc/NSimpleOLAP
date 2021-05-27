@@ -50,7 +50,7 @@ namespace NSimpleOLAP.Parsers
         case TokenType.SUB:
         case TokenType.MULT:
         case TokenType.DIV:
-          DefineOpearation(node, builder);
+          DefineOperation(node, builder);
           break;
         default:
           break;
@@ -130,64 +130,183 @@ namespace NSimpleOLAP.Parsers
     }*/
 
 
-    private void DefineOpearation(BinaryNode<Token> node, ExpressionElementsBuilder<T> builder)
+    private void DefineOperation(BinaryNode<Token> node, ExpressionElementsBuilder<T> builder)
     {
       
       if (node.HasMeasure())
       {
-        var measures = node.GetMeasures().ToArray();
-        var measureRoot = DefineMeasure(measures[0], builder);
+        if (node.Left.IsMeasure() && node.Right.IsMeasure())
+          DefineBinaryMeasuresOperation(node, builder);
+        
+        if (node.HasValue())
+          DefineMixedBinaryMeasureLiteralOperation(node, builder);
 
-        if (measures.Length == 1)
-        {
-          if (node.HasValue())
-          {
-            var values = node.GetValues().ToArray();
-
-            switch (node.Value.TToken)
-            {
-              case TokenType.SUM:
-                DefineSum((NumToken)values[0], measureRoot);
-                break;
-              case TokenType.SUB:
-                DefineSubtraction((NumToken)values[0], measureRoot);
-                break;
-              case TokenType.MULT:
-                DefineMultiplication((NumToken)values[0], measureRoot);
-                break;
-              case TokenType.DIV:
-                DefineDivision((NumToken)values[0], measureRoot);
-                break;
-            }
-          }
-        }
-        else
-        {
-          var root2 = new ExpressionElementsBuilder<T>(_resolver);
-          var measure2Root = DefineMeasure(measures[1], root2);
-
-          measure2Root.Value();
-
-          switch (node.Value.TToken)
-          {
-            case TokenType.SUM:
-              measureRoot.Sum(root2);
-              break;
-            case TokenType.SUB:
-              measureRoot.Subtract(root2);
-              break;
-            case TokenType.MULT:
-              measureRoot.Multiply(root2);
-              break;
-            case TokenType.DIV:
-              measureRoot.Divide(root2);
-              break;
-          }
-        }
+        if (node.HasOperations())
+          DefineMeasuresWithAnotherOperation(node, builder);
+        
       }
       else if (node.HasValue())
       {
-        var values = node.GetValues().ToArray();
+        if (node.Left.IsValue() && node.Right.IsValue())
+          DefineBinaryLiteralsOperation(node, builder);
+
+        if (node.HasOperations())
+          DefineMeasuresWithAnotherOperation(node, builder);
+      }
+      else if (node.HasOperations())
+      {
+
+      }
+    }
+
+    private void DefineMeasuresWithAnotherOperation(BinaryNode<Token> node, ExpressionElementsBuilder<T> builder)
+    {
+      if (node.Left.IsMeasure())
+      {
+        var nodeLeave = node.Left.IsMeasure() ? DefineMeasure(node.Left.Value, builder) : DefineScalar((NumToken)node.Left.Value, builder);
+        var root2 = new ExpressionElementsBuilder<T>(_resolver);
+
+        ProcessToken(node.Right, root2);
+
+        switch (node.Value.TToken)
+        {
+          case TokenType.SUM:
+            nodeLeave.Sum(root2);
+            break;
+          case TokenType.SUB:
+            nodeLeave.Subtract(root2);
+            break;
+          case TokenType.MULT:
+            nodeLeave.Multiply(root2);
+            break;
+          case TokenType.DIV:
+            nodeLeave.Divide(root2);
+            break;
+        }
+      }
+      else
+      {
+        var root2 = new ExpressionElementsBuilder<T>(_resolver);
+        var nodeLeave = node.Right.IsMeasure() ?  DefineMeasure(node.Right.Value, root2)  : DefineScalar((NumToken)node.Right.Value, root2);
+
+        nodeLeave.Value();
+
+        ProcessToken(node.Left, builder);
+
+        switch (node.Value.TToken)
+        {
+          case TokenType.SUM:
+            builder.Node.Sum(root2);
+            break;
+          case TokenType.SUB:
+            builder.Node.Subtract(root2);
+            break;
+          case TokenType.MULT:
+            builder.Node.Multiply(root2);
+            break;
+          case TokenType.DIV:
+            builder.Node.Divide(root2);
+            break;
+        }
+      }
+    }
+
+    private void DefineBinaryMeasuresOperation(BinaryNode<Token> node, ExpressionElementsBuilder<T> builder)
+    {
+      var measureRoot = DefineMeasure(node.Left.Value, builder);
+      var root2 = new ExpressionElementsBuilder<T>(_resolver);
+      var measure2Root = DefineMeasure(node.Right.Value, root2);
+
+      measure2Root.Value();
+
+      switch (node.Value.TToken)
+      {
+        case TokenType.SUM:
+          measureRoot.Sum(root2);
+          break;
+        case TokenType.SUB:
+          measureRoot.Subtract(root2);
+          break;
+        case TokenType.MULT:
+          measureRoot.Multiply(root2);
+          break;
+        case TokenType.DIV:
+          measureRoot.Divide(root2);
+          break;
+      }
+    }
+
+    private void DefineBinaryLiteralsOperation(BinaryNode<Token> node, ExpressionElementsBuilder<T> builder)
+    {
+      var literalRoot = DefineScalar((NumToken)node.Left.Value, builder);
+      var root2 = new ExpressionElementsBuilder<T>(_resolver);
+      var literal2Root = DefineScalar((NumToken)node.Right.Value, root2);
+
+      literal2Root.Value();
+
+      switch (node.Value.TToken)
+      {
+        case TokenType.SUM:
+          literalRoot.Sum(root2);
+          break;
+        case TokenType.SUB:
+          literalRoot.Subtract(root2);
+          break;
+        case TokenType.MULT:
+          literalRoot.Multiply(root2);
+          break;
+        case TokenType.DIV:
+          literalRoot.Divide(root2);
+          break;
+      }
+    }
+
+    private void DefineMixedBinaryMeasureLiteralOperation(BinaryNode<Token> node, ExpressionElementsBuilder<T> builder)
+    {
+      var nodeRoot = node.Left.IsMeasure() ? DefineMeasure(node.Left.Value, builder) : DefineScalar((NumToken)node.Left.Value, builder);
+      var root2 = new ExpressionElementsBuilder<T>(_resolver);
+      var node2Root = node.Right.IsMeasure() ? DefineMeasure(node.Right.Value, builder) : DefineScalar((NumToken)node.Right.Value, root2);
+
+      node2Root.Value();
+
+      switch (node.Value.TToken)
+      {
+        case TokenType.SUM:
+          nodeRoot.Sum(root2);
+          break;
+        case TokenType.SUB:
+          nodeRoot.Subtract(root2);
+          break;
+        case TokenType.MULT:
+          nodeRoot.Multiply(root2);
+          break;
+        case TokenType.DIV:
+          nodeRoot.Divide(root2);
+          break;
+      }
+    }
+
+    private void DefineBinaryOperation(BinaryNode<Token> node, ExpressionElementsBuilder<T> builder)
+    {
+      var root2 = new ExpressionElementsBuilder<T>(_resolver);
+
+      ProcessToken(node.Left, builder);
+      ProcessToken(node.Right, root2);
+
+      switch (node.Value.TToken)
+      {
+        case TokenType.SUM:
+          builder.Node.Sum(root2);
+          break;
+        case TokenType.SUB:
+          builder.Node.Subtract(root2);
+          break;
+        case TokenType.MULT:
+          builder.Node.Multiply(root2);
+          break;
+        case TokenType.DIV:
+          builder.Node.Divide(root2);
+          break;
       }
     }
 
@@ -195,6 +314,11 @@ namespace NSimpleOLAP.Parsers
     private ExpressionNodeBuilder<T> DefineMeasure(Token token, ExpressionElementsBuilder<T> builder)
     {
       return builder.Set(token.Text);
+    }
+
+    private ExpressionNodeBuilder<T> DefineScalar(NumToken token, ExpressionElementsBuilder<T> builder)
+    {
+      return builder.Set((ValueType)token.GetValue());
     }
 
     private void DefineSum(NumToken token, ExpressionNodeBuilder<T> builder)

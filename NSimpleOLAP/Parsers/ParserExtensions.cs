@@ -26,6 +26,32 @@ namespace NSimpleOLAP.Parsers
       return node.Left.Value.TToken == TokenType.PAR || node.Right.Value.TToken == TokenType.PAR;
     }
 
+    public static bool IsMeasure(this BinaryNode<Token> node)
+    {
+      return node.Value.TToken == TokenType.PAR;
+    }
+
+    public static bool IsValue(this BinaryNode<Token> node)
+    {
+      return node.Value.TToken == TokenType.NUM;
+    }
+
+    public static bool IsOperation(this BinaryNode<Token> node)
+    {
+      return node.Value.GToken == TokenGroup.Operator;
+    }
+
+    public static bool HasOperations(this BinaryNode<Token> node)
+    {
+      if (node.Left == null)
+        return node.Right.IsOperation();
+
+      if (node.Right == null)
+        return node.Left.IsOperation();
+
+      return node.Left.IsOperation() || node.Right.IsOperation();
+    }
+
     public static bool HasValue(this BinaryNode<Token> node)
     {
       if (node.Left == null)

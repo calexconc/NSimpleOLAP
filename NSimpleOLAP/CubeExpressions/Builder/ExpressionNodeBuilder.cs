@@ -14,6 +14,7 @@ namespace NSimpleOLAP.CubeExpressions.Builder
     private ExpressionElementPickerBuilder<T> _picker;
     private OperationType _operation;
     private ValueType _value;
+    private ValueType _rootValue;
     private ExpressionElementsBuilder<T> _leftNodeBuilder;
     private Type _type;
 
@@ -24,6 +25,12 @@ namespace NSimpleOLAP.CubeExpressions.Builder
       _type = picker.ReturnType;
     }
 
+    public ExpressionNodeBuilder(ValueType value)
+    {
+      _rootValue = value;
+      _type = value.GetType();
+    }
+
     internal Tuple<T, List<KeyValuePair<T, T>[]>> Picker
     {
       get
@@ -32,11 +39,27 @@ namespace NSimpleOLAP.CubeExpressions.Builder
       }
     }
 
+    internal bool IsListeral
+    {
+      get
+      {
+        return _picker == null;
+      }
+    }
+
     internal OperationType Operation
     {
       get
       {
         return _operation;
+      }
+    }
+
+    internal ValueType RootValue
+    {
+      get
+      {
+        return _rootValue;
       }
     }
 
