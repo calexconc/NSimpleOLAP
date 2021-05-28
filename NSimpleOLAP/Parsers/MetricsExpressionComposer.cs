@@ -52,87 +52,30 @@ namespace NSimpleOLAP.Parsers
         case TokenType.DIV:
           DefineOperation(node, builder);
           break;
+        case TokenType.ABS:
+        case TokenType.LN:
+        case TokenType.SQRT:
+        case TokenType.EXP:
+          break;
+        case TokenType.PAR:
+        case TokenType.NUM:
+          DefineValue(node, builder);
+          break;
         default:
           break;
       }
     }
 
-    /*
-    private Expression ProcessToken(BinaryNode<Token> node)
+    private void DefineValue(BinaryNode<Token> node, ExpressionElementsBuilder<T> builder)
     {
-      switch (node.Value.TToken)
-      {
-        case TokenType.SUM:
-          return DefineSum(node);
-        case TokenType.SUB:
-          return DefineSub(node);
-        case TokenType.MULT:
-          return DefineMult(node);
-        case TokenType.DIV:
-          return DefineDiv(node);
-        case TokenType.POW:
-          return DefinePow(node);
-        case TokenType.AND:
-          return DefineAnd(node);
-        case TokenType.OR:
-          return DefineOr(node);
-        case TokenType.NOT:
-          return DefineNot(node);
-        case TokenType.EQUALS:
-          return DefineEqual(node);
-        case TokenType.NOTEQUALS:
-          return DefineNotEqual(node);
-        case TokenType.GREATER:
-          return DefineGreater(node);
-        case TokenType.GREATEROREQUALS:
-          return DefineGreaterOrEqual(node);
-        case TokenType.LOWER:
-          return DefineLower(node);
-        case TokenType.LOWEROREQUALS:
-          return DefineLowerOrEqual(node);
-        case TokenType.REM:
-          return DefineRemainder(node);
-        case TokenType.EXP:
-          return DefineExp(node);
-        case TokenType.LN:
-          return DefineLN(node);
-        case TokenType.COS:
-          return DefineCos(node);
-        case TokenType.COSH:
-          return DefineCosh(node);
-        case TokenType.SIN:
-          return DefineSin(node);
-        case TokenType.TAN:
-          return DefineTan(node);
-        case TokenType.TANH:
-          return DefineTanh(node);
-        case TokenType.SQRT:
-          return DefineSQRT(node);
-        case TokenType.LOG10:
-          return DefineLOG10(node);
-        case TokenType.ABS:
-          return DefineAbs(node);
-        case TokenType.PAR:
-          return CreateParameter(node.Value);
-        case TokenType.NUM:
-        case TokenType.BOOL:
-          return CreateLiteral(node.Value);
-        case TokenType.PI:
-        case TokenType.E:
-          return CreateConstant(node.Value);
-        case TokenType.STARTPAR:
-          break;
-        case TokenType.ENDPAR:
-          break;
-      }
+      var nodeLeave = node.IsMeasure() ? DefineMeasure(node.Value, builder) : DefineScalar((NumToken)node.Value, builder);
 
-      return null;
-    }*/
+      nodeLeave.Value();
+    }
 
 
     private void DefineOperation(BinaryNode<Token> node, ExpressionElementsBuilder<T> builder)
     {
-      
       if (node.HasMeasure())
       {
         if (node.Left.IsMeasure() && node.Right.IsMeasure())
@@ -143,7 +86,6 @@ namespace NSimpleOLAP.Parsers
 
         if (node.HasOperations())
           DefineMeasuresWithAnotherOperation(node, builder);
-        
       }
       else if (node.HasValue())
       {
@@ -154,14 +96,12 @@ namespace NSimpleOLAP.Parsers
           DefineMeasuresWithAnotherOperation(node, builder);
       }
       else if (node.HasOperations())
-      {
-
-      }
+        DefineBinaryOperation(node, builder);
     }
 
     private void DefineMeasuresWithAnotherOperation(BinaryNode<Token> node, ExpressionElementsBuilder<T> builder)
     {
-      if (node.Left.IsMeasure())
+      if (node.Left.IsMeasure() || node.Left.IsValue())
       {
         var nodeLeave = node.Left.IsMeasure() ? DefineMeasure(node.Left.Value, builder) : DefineScalar((NumToken)node.Left.Value, builder);
         var root2 = new ExpressionElementsBuilder<T>(_resolver);
@@ -184,7 +124,7 @@ namespace NSimpleOLAP.Parsers
             break;
         }
       }
-      else
+      else if (node.Right.IsMeasure() || node.Right.IsValue())
       {
         var root2 = new ExpressionElementsBuilder<T>(_resolver);
         var nodeLeave = node.Right.IsMeasure() ?  DefineMeasure(node.Right.Value, root2)  : DefineScalar((NumToken)node.Right.Value, root2);
@@ -263,9 +203,9 @@ namespace NSimpleOLAP.Parsers
 
     private void DefineMixedBinaryMeasureLiteralOperation(BinaryNode<Token> node, ExpressionElementsBuilder<T> builder)
     {
-      var nodeRoot = node.Left.IsMeasure() ? DefineMeasure(node.Left.Value, builder) : DefineScalar((NumToken)node.Left.Value, builder);
+      var nodeRoot = node.Left.IsMeasure() ? DefineMeasure(node.Left.Value, builder) : DefineMeasure(node.Right.Value, builder);
       var root2 = new ExpressionElementsBuilder<T>(_resolver);
-      var node2Root = node.Right.IsMeasure() ? DefineMeasure(node.Right.Value, builder) : DefineScalar((NumToken)node.Right.Value, root2);
+      var node2Root = node.Left.IsMeasure() ? DefineScalar((NumToken)node.Right.Value, root2) : DefineScalar((NumToken)node.Left.Value, root2);
 
       node2Root.Value();
 
@@ -321,52 +261,5 @@ namespace NSimpleOLAP.Parsers
       return builder.Set((ValueType)token.GetValue());
     }
 
-    private void DefineSum(NumToken token, ExpressionNodeBuilder<T> builder)
-    {
-      if (token.ParameterType == typeof(int))
-        builder.Sum<int>((int)token.GetValue());
-      else if (token.ParameterType == typeof(double))
-        builder.Sum<double>((double)token.GetValue());
-      else if (token.ParameterType == typeof(float))
-        builder.Sum<float>((float)token.GetValue());
-      else if (token.ParameterType == typeof(decimal))
-        builder.Sum<decimal>((decimal)token.GetValue());
-    }
-
-    private void DefineSubtraction(NumToken token, ExpressionNodeBuilder<T> builder)
-    {
-      if (token.ParameterType == typeof(int))
-        builder.Subtract<int>((int)token.GetValue());
-      else if (token.ParameterType == typeof(double))
-        builder.Subtract<double>((double)token.GetValue());
-      else if (token.ParameterType == typeof(float))
-        builder.Subtract<float>((float)token.GetValue());
-      else if (token.ParameterType == typeof(decimal))
-        builder.Subtract<decimal>((decimal)token.GetValue());
-    }
-
-    private void DefineMultiplication(NumToken token, ExpressionNodeBuilder<T> builder)
-    {
-      if (token.ParameterType == typeof(int))
-        builder.Multiply<int>((int)token.GetValue());
-      else if (token.ParameterType == typeof(double))
-        builder.Multiply<double>((double)token.GetValue());
-      else if (token.ParameterType == typeof(float))
-        builder.Multiply<float>((float)token.GetValue());
-      else if (token.ParameterType == typeof(decimal))
-        builder.Multiply<decimal>((decimal)token.GetValue());
-    }
-
-    private void DefineDivision(NumToken token, ExpressionNodeBuilder<T> builder)
-    {
-      if (token.ParameterType == typeof(int))
-        builder.Divide<int>((int)token.GetValue());
-      else if (token.ParameterType == typeof(double))
-        builder.Divide<double>((double)token.GetValue());
-      else if (token.ParameterType == typeof(float))
-        builder.Divide<float>((float)token.GetValue());
-      else if (token.ParameterType == typeof(decimal))
-        builder.Divide<decimal>((decimal)token.GetValue());
-    }
   }
 }

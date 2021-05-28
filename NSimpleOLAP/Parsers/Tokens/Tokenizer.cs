@@ -255,6 +255,9 @@ namespace NSimpleOLAP.Parsers.Tokens
         case "SQRT":
         case "ABS":
         case "LOG10":
+        case "MIN":
+        case "MAX":
+        case "AVG":
           return true;
 
         default:

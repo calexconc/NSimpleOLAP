@@ -149,6 +149,94 @@ namespace NSimpleOLAP.CubeExpressions
       }
     }
 
+    internal static ValueType Abs(this ValueType x)
+    {
+      
+      switch (x)
+      {
+        case int i:
+          return Math.Abs((int)x);
+
+        case double i:
+          return Math.Abs((double)x);
+
+        case decimal i:
+          return Math.Abs((decimal)x);
+
+        case float i:
+          return Math.Abs((float)x);
+
+        default:
+          throw new Exception("Type is not supported.");
+      }
+    }
+
+    internal static ValueType Ln(this ValueType x)
+    {
+
+      switch (x)
+      {
+        case int i:
+          return Math.Log((int)x);
+
+        case double i:
+          return Math.Log((double)x);
+
+        case decimal i:
+          return Convert.ToDecimal(Math.Log(Convert.ToDouble(x)));
+
+        case float i:
+          return Math.Log((float)x);
+
+        default:
+          throw new Exception("Type is not supported.");
+      }
+    }
+
+    internal static ValueType Sqrt(this ValueType x)
+    {
+
+      switch (x)
+      {
+        case int i:
+          return Convert.ToInt32(Math.Sqrt((int)x));
+
+        case double i:
+          return Math.Sqrt((double)x);
+
+        case decimal i:
+          return Convert.ToDecimal(Math.Sqrt(Convert.ToDouble(x)));
+
+        case float i:
+          return Math.Sqrt((float)x);
+
+        default:
+          throw new Exception("Type is not supported.");
+      }
+    }
+
+    internal static ValueType Exp(this ValueType x)
+    {
+
+      switch (x)
+      {
+        case int i:
+          return Math.Exp((int)x);
+
+        case double i:
+          return Math.Exp((double)x);
+
+        case decimal i:
+          return Convert.ToDecimal(Math.Exp(Convert.ToDouble(x)));
+
+        case float i:
+          return Math.Exp((float)x);
+
+        default:
+          throw new Exception("Type is not supported.");
+      }
+    }
+
     internal static ValueType Maximum(this ValueType x, ValueType y)
     {
       switch (x)

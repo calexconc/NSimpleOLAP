@@ -188,6 +188,25 @@ namespace NSimpleOLAP.CubeExpressions.Builder
       _operation = OperationType.MIN;
     }
 
+    public void SQRT()
+    {
+      _operation = OperationType.SQRT;
+    }
+
+    public void Ln()
+    {
+      _operation = OperationType.LN;
+    }
+    public void ABS()
+    {
+      _operation = OperationType.ABS;
+    }
+
+    public void Exp()
+    {
+      _operation = OperationType.EXP;
+    }
+
     internal Func<IExpressionContext<T, ICell<T>>, IExpressionContext<T, ICell<T>>> Create()
     {
       if (_leftNodeBuilder == null)

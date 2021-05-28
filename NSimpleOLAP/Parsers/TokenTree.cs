@@ -1,6 +1,7 @@
 ﻿using NSimpleOLAP.Parsers.Collections;
 using NSimpleOLAP.Parsers.Tokens;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace NSimpleOLAP.Parsers
@@ -22,10 +23,29 @@ namespace NSimpleOLAP.Parsers
     {
       LinkedList<Token> lnkList = new LinkedList<Token>(values);
 
+      CheckAndRemoveExtraParentesis(lnkList);
+
       GenerateNodes(lnkList.First);
     }
 
     #region private members
+
+    private void CheckAndRemoveExtraParentesis(LinkedList<Token> lnkList)
+    {
+      var parentesisCount = lnkList.Count(x => x.TToken == TokenType.STARTPAR || x.TToken == TokenType.ENDPAR);
+      var operatorsFunctionsCount = lnkList.Count(x => x.GToken == TokenGroup.Operator);
+
+      if (operatorsFunctionsCount == 1 &&
+          parentesisCount == 2)
+      {
+        var elements = lnkList
+          .Where(x => x.TToken == TokenType.STARTPAR || x.TToken == TokenType.ENDPAR)
+          .ToArray();
+
+        foreach (var item in elements)
+          lnkList.Remove(item);
+      }
+    }
 
     private void GenerateNodes(LinkedListNode<Token> node)
     {
@@ -61,6 +81,9 @@ namespace NSimpleOLAP.Parsers
         case TokenType.LOG10:
         case TokenType.ABS:
         case TokenType.SQRT:
+        case TokenType.MIN:
+        case TokenType.MAX:
+        case TokenType.AVG:
           currentnode = this.HandleFunction(node);
           break;
 
@@ -170,6 +193,9 @@ namespace NSimpleOLAP.Parsers
           case TokenType.LOG10:
           case TokenType.ABS:
           case TokenType.SQRT:
+          case TokenType.MIN:
+          case TokenType.MAX:
+          case TokenType.AVG:
           case TokenType.EQUALS:
           case TokenType.NOTEQUALS:
           case TokenType.GREATER:
@@ -229,6 +255,9 @@ namespace NSimpleOLAP.Parsers
           case TokenType.LOG10:
           case TokenType.ABS:
           case TokenType.SQRT:
+          case TokenType.MIN:
+          case TokenType.MAX:
+          case TokenType.AVG:
           case TokenType.AND:
           case TokenType.OR:
           case TokenType.NOT:

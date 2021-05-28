@@ -20,7 +20,7 @@
 
   public enum OutputCellType { DATA, COLUMN_LABEL, ROW_LABEL, COLUMN_TOTAL, ROW_TOTAL, COLUMN_BASE_TOTAL, ROW_BASE_TOTAL }
 
-  public enum OperationType { NONE = 0, SUM = 1, SUBTRACTION = 2, MULTIPLICATION = 3, DIVISION = 4, MIN = 5, MAX = 6, AVERAGE = 7, VALUE = 8 }
+  public enum OperationType { NONE = 0, SUM = 1, SUBTRACTION = 2, MULTIPLICATION = 3, DIVISION = 4, MIN = 5, MAX = 6, AVERAGE = 7, VALUE = 8, ABS = 9, LN = 10, SQRT = 11, EXP = 12 }
 
   public enum DateLevels { DATE = 0, DAY = 1 , MONTH_WITH_YEAR = 2, QUARTER = 3 , YEAR = 4, WEEK = 5, MONTH = 6 }
 
