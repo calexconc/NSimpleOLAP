@@ -8,7 +8,7 @@ namespace NSimpleOLAP.Parsers.Tokens
     NUM = 0, PAR = 1, SUM = 2, SUB = 3, MULT = 4, DIV = 5, REM = 6, POW = 7, STARTPAR = 8, ENDPAR = 9,
     AND = 10, OR = 11, NOT = 12, EQUALS = 13, NOTEQUALS = 14, LOWER = 15, GREATER = 16, LOWEROREQUALS = 17, GREATEROREQUALS = 18
       , BOOL = 19, EXP = 20, LN = 21, COS = 22, SIN = 23, TAN = 24, COSH = 25, SINH = 26, TANH = 27, ABS = 28, SQRT = 29, LOG10 = 30,
-    PI = 31, E = 32,
+    PI = 31, E = 32, MIN = 33, MAX = 34, AVG = 35,
     EOF = 256
   }
 
@@ -65,6 +65,9 @@ namespace NSimpleOLAP.Parsers.Tokens
         case TokenType.SQRT:
         case TokenType.ABS:
         case TokenType.LOG10:
+        case TokenType.MIN:
+        case TokenType.MAX:
+        case TokenType.AVG:
           token = new OperatorToken(ttype);
           break;
 
@@ -206,6 +209,15 @@ namespace NSimpleOLAP.Parsers.Tokens
 
         case "ABS":
           return TokenType.ABS;
+
+        case "MIN":
+          return TokenType.MIN;
+
+        case "MAX":
+          return TokenType.MAX;
+
+        case "AVG":
+          return TokenType.AVG;
 
         case "-PI":
         case "PI":

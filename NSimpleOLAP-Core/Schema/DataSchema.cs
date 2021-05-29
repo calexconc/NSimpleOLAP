@@ -6,6 +6,8 @@ using NSimpleOLAP.Storage.Interfaces;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using NSimpleOLAP.Parsers;
+using NSimpleOLAP.Common.Utils;
 
 namespace NSimpleOLAP.Schema
 {
@@ -16,6 +18,7 @@ namespace NSimpleOLAP.Schema
     where T : struct, IComparable
   {
     private DataSourceCollection _datasources;
+    private MetricsExpressionComposer<T> _metricExpressionEvaluator;
 
     public DataSchema(IMemberStorage<T, Dimension<T>> dimstorage,
                       IMemberStorage<T, Measure<T>> messtorage,
@@ -34,6 +37,7 @@ namespace NSimpleOLAP.Schema
     {
       _datasources = datasources;
       this.Config = config.MetaData;
+      _metricExpressionEvaluator = new MetricsExpressionComposer<T>(new NamespaceResolver<T>(this));
       this.Initialize();
     }
 
@@ -215,6 +219,16 @@ namespace NSimpleOLAP.Schema
       {
         Metric<T> nmes = new Metric<T>(item);
         this.Metrics.Add(nmes);
+
+        try
+        {
+          if (!string.IsNullOrEmpty(item.MetricFunction))
+            nmes.MetricExpression = _metricExpressionEvaluator.Create(item.Name, item.MetricFunction);
+        }
+        catch (Exception ex)
+        {
+          Console.WriteLine(ex.Message);
+        }
       }
     }
 

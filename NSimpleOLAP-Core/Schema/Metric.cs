@@ -59,18 +59,6 @@ namespace NSimpleOLAP.Schema
     {
       this.DataType = config.DataType;
       this.Name = config.Name;
-
-      try
-      {
-        // todo parser for expressions
-        // this.MetricExpression = (MetricsExpression<T>)config.MetricFunction;
-      }
-      catch (Exception ex)
-      {
-        Console.WriteLine(ex.Message);
-        throw;
-        // todo extra error handling
-      }
     }
 
     #endregion private members

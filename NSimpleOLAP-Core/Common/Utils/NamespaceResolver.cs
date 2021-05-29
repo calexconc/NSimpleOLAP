@@ -23,6 +23,14 @@ namespace NSimpleOLAP.Common.Utils
       _namespace = cube.NameSpace;
     }
 
+    public NamespaceResolver(DataSchema<T> schema)
+    {
+      _schema = schema;
+      _dimensionTranslator = new DimensionReferenceTranslator<T>(_schema);
+      _measureTranslator = new MeasureReferenceTranslator<T>(_schema);
+      _metricsTranslator = new MetricsReferenceTranslator<T>(_schema);
+    }
+
     public IDataItem<T> GetDataItemInfo(string name)
     {
       if (_namespace.HasEntity(name))
