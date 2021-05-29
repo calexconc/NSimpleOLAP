@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NSimpleOLAP.Query.Interfaces;
-using NSimpleOLAP.Common.Utils;
-using NSimpleOLAP.Common;
-using NSimpleOLAP.Interfaces;
+﻿using NSimpleOLAP.Common.Utils;
 using NSimpleOLAP.CubeExpressions.Interfaces;
+using NSimpleOLAP.Interfaces;
+using System;
 
 namespace NSimpleOLAP.CubeExpressions.Builder
 {

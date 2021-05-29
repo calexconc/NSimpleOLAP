@@ -56,6 +56,10 @@ namespace NSimpleOLAP.Parsers
         case TokenType.LN:
         case TokenType.SQRT:
         case TokenType.EXP:
+        case TokenType.MIN:
+        case TokenType.MAX:
+        case TokenType.AVG:
+          DefineUnaryOperation(node, builder);
           break;
         case TokenType.PAR:
         case TokenType.NUM:
@@ -71,6 +75,36 @@ namespace NSimpleOLAP.Parsers
       var nodeLeave = node.IsMeasure() ? DefineMeasure(node.Value, builder) : DefineScalar((NumToken)node.Value, builder);
 
       nodeLeave.Value();
+    }
+
+    private void DefineUnaryOperation(BinaryNode<Token> node, ExpressionElementsBuilder<T> builder)
+    {
+      ProcessToken(node.Right, builder);
+
+      switch (node.Value.TToken)
+      {
+        case TokenType.MIN:
+          builder.Node.Min();
+          break;
+        case TokenType.MAX:
+          builder.Node.Max();
+          break;
+        case TokenType.AVG:
+          builder.Node.Average();
+          break;
+        case TokenType.ABS:
+          builder.Node.ABS();
+          break;
+        case TokenType.LN:
+          builder.Node.Ln();
+          break;
+        case TokenType.SQRT:
+          builder.Node.SQRT();
+          break;
+        case TokenType.EXP:
+          builder.Node.Exp();
+          break;
+      }
     }
 
 

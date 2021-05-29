@@ -199,7 +199,7 @@ namespace NSimpleOLAP.CubeExpressions
       switch (x)
       {
         case int i:
-          return Convert.ToInt32(Math.Sqrt((int)x));
+          return Math.Sqrt((int)x);
 
         case double i:
           return Math.Sqrt((double)x);
