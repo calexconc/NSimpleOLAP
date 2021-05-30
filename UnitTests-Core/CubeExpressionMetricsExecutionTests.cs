@@ -261,5 +261,30 @@ namespace UnitTests
         Assert.IsTrue(result.Count == 2);
       }
     }
+
+    [Test]
+    public void Composite_Metric_Multiplication_Text_Expression_Execution_Test()
+    {
+      using (var cube = CubeSourcesFixture.GetBasicCubeThreeDimensionsTwoMeasures2())
+      {
+        cube.Initialize();
+
+        cube.BuildMetrics()
+        .AddTextExpression("testeMultiply3", typeof(double), "quantity * spent");
+
+        Assert.IsNotNull(cube.Schema.Metrics["testeMultiply3"]);
+
+        cube.Process();
+
+        var cell = cube.Cells.Take(1).FirstOrDefault();
+
+
+        var valueMeasure = (int)cell.Values[cube.Schema.Measures["quantity"].ID];
+        var valueMeasure2 = (double)cell.Values[cube.Schema.Measures["spent"].ID];
+        var value = (double)cell.Values[cube.Schema.Metrics["testeMultiply3"].ID];
+
+        Assert.AreEqual(valueMeasure * valueMeasure2, value);
+      }
+    }
   }
 }

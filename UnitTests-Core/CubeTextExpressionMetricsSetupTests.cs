@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NSimpleOLAP;
-using NSimpleOLAP.Query;
-using NSimpleOLAP.Query.Builder;
-using NUnit.Framework;
-using NSimpleOLAP.Common.Utils;
-using NSimpleOLAP.CubeExpressions;
-using NSimpleOLAP;
-using NSimpleOLAP.Common;
+﻿using NSimpleOLAP.Common;
 using NSimpleOLAP.Configuration.Fluent;
+using NUnit.Framework;
+using System;
+using System.Linq;
 
 namespace UnitTests
 {
@@ -114,7 +105,8 @@ namespace UnitTests
             mesbuild.ValueField("items")
               .SetType(typeof(int));
           })
-          .AddMetric("teste1", metricBuilder => {
+          .AddMetric("teste1", metricBuilder =>
+          {
             metricBuilder
               .SetType(typeof(int))
               .SetExpression("quantity + 10");
@@ -233,7 +225,8 @@ namespace UnitTests
             mesbuild.ValueField("items")
               .SetType(typeof(int));
           })
-          .AddMetric("testeMultiply2", metricBuilder => {
+          .AddMetric("testeMultiply2", metricBuilder =>
+          {
             metricBuilder
               .SetType(typeof(int))
               .SetExpression("quantity * spent");
@@ -352,7 +345,8 @@ namespace UnitTests
             mesbuild.ValueField("items")
               .SetType(typeof(int));
           })
-          .AddMetric("teste2DoubleSum", metricBuilder => {
+          .AddMetric("teste2DoubleSum", metricBuilder =>
+          {
             metricBuilder
               .SetType(typeof(int))
               .SetExpression("quantity + quantity");
@@ -470,7 +464,8 @@ namespace UnitTests
             mesbuild.ValueField("items")
               .SetType(typeof(int));
           })
-          .AddMetric("testeMultiply1", metricBuilder => {
+          .AddMetric("testeMultiply1", metricBuilder =>
+          {
             metricBuilder
               .SetType(typeof(int))
               .SetExpression("3 * quantity");
@@ -587,7 +582,8 @@ namespace UnitTests
             mesbuild.ValueField("items")
               .SetType(typeof(int));
           })
-          .AddMetric("testeDivide1", metricBuilder => {
+          .AddMetric("testeDivide1", metricBuilder =>
+          {
             metricBuilder
               .SetType(typeof(double))
               .SetExpression("quantity / 2");
@@ -704,7 +700,8 @@ namespace UnitTests
             mesbuild.ValueField("items")
               .SetType(typeof(int));
           })
-          .AddMetric("testeSubtract1", metricBuilder => {
+          .AddMetric("testeSubtract1", metricBuilder =>
+          {
             metricBuilder
               .SetType(typeof(int))
               .SetExpression("quantity - 10");
@@ -821,7 +818,8 @@ namespace UnitTests
             mesbuild.ValueField("items")
               .SetType(typeof(int));
           })
-          .AddMetric("testeDivide2", metricBuilder => {
+          .AddMetric("testeDivide2", metricBuilder =>
+          {
             metricBuilder
               .SetType(typeof(int))
               .SetExpression("spent / quantity");
@@ -940,22 +938,26 @@ namespace UnitTests
             mesbuild.ValueField("items")
               .SetType(typeof(int));
           })
-          .AddMetric("testeAverage", metricBuilder => {
+          .AddMetric("testeAverage", metricBuilder =>
+          {
             metricBuilder
               .SetType(typeof(double))
               .SetExpression("AVG quantity");
           })
-          .AddMetric("testeMax", metricBuilder => {
+          .AddMetric("testeMax", metricBuilder =>
+          {
             metricBuilder
               .SetType(typeof(int))
               .SetExpression("MAX quantity");
           })
-          .AddMetric("testeMin", metricBuilder => {
+          .AddMetric("testeMin", metricBuilder =>
+          {
             metricBuilder
               .SetType(typeof(int))
               .SetExpression("MIN quantity");
           })
-          .AddMetric("testeSqrt", metricBuilder => {
+          .AddMetric("testeSqrt", metricBuilder =>
+          {
             metricBuilder
               .SetType(typeof(double))
               .SetExpression("SQRT quantity");
@@ -987,7 +989,6 @@ namespace UnitTests
         Assert.AreEqual(1, valueMin);
         Assert.AreEqual(Math.Sqrt(valueMeasure), valueSqrt);
       }
-      
     }
   }
 }

@@ -23,6 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		Markdown\Configuration.md = Markdown\Configuration.md
 		Markdown\Datasources.md = Markdown\Datasources.md
 		Markdown\DimensionsAndMeasures.md = Markdown\DimensionsAndMeasures.md
+		Markdown\Metrics.md = Markdown\Metrics.md
 		Markdown\Querying.md = Markdown\Querying.md
 	EndProjectSection
 EndProject
