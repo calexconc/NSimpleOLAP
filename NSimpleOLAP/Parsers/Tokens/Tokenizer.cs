@@ -189,7 +189,7 @@ namespace NSimpleOLAP.Parsers.Tokens
         Token token = Token.Create(item);
 
         if (start && token.TToken == TokenType.SUM)
-          ; //do nothing in this case
+          continue; //do nothing in this case
         else if (start && token.TToken == TokenType.SUB)
         {
           yield return Token.Create("-1");

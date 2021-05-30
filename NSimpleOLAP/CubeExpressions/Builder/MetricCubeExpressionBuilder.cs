@@ -1,5 +1,6 @@
 ﻿using NSimpleOLAP.Common.Utils;
 using NSimpleOLAP.Configuration;
+using NSimpleOLAP.Parsers;
 using NSimpleOLAP.Schema;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,13 @@ namespace NSimpleOLAP.CubeExpressions.Builder
   {
     protected Cube<T> _innerCube;
     private NamespaceResolver<T> _resolver;
+    private MetricsExpressionComposer<T> _metricExpressionEvaluator;
     protected Dictionary<string, MetricExpressionBuilder<T>> _expressionBuilders;
 
     protected void Init()
     {
       _resolver = new NamespaceResolver<T>(_innerCube);
+      _metricExpressionEvaluator = new MetricsExpressionComposer<T>(_resolver);
       _expressionBuilders = new Dictionary<string, MetricExpressionBuilder<T>>();
     }
 
@@ -28,6 +31,33 @@ namespace NSimpleOLAP.CubeExpressions.Builder
       _expressionBuilders.Add(name, builder);
 
       return this;
+    }
+
+    public Cube<T> AddTextExpression(string name, Type type, string expression)
+    {
+      var metricConfig = new MetricConfig
+      {
+        Name = name,
+        DataType = type,
+        MetricFunction = expression
+      };
+      var metric = new Metric<T>(metricConfig);
+
+      try
+      {
+        if (!string.IsNullOrEmpty(metricConfig.MetricFunction))
+        {
+          metric.MetricExpression = _metricExpressionEvaluator.Create(metricConfig.Name, metricConfig.MetricFunction);
+          _innerCube.Schema.Metrics.Add(metric);
+        }
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex.Message);
+        throw;
+      }
+
+      return _innerCube;
     }
 
     public void Create()
