@@ -14,6 +14,7 @@ More on that later.
 - [Loading Data with Data Sources](Markdown/Datasources.md)
 - [Working with Dimensions](Markdown/DimensionsAndMeasures.md)
 - [Choosing Measures](Markdown/DimensionsAndMeasures.md##Choosing-Measures)
+- [Working with Metrics](Markdown/Metrics.md)
 
 ## Quick Start
 
