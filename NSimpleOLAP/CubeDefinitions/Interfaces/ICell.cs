@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NSimpleOLAP.Triggers.Interfaces;
 
 namespace NSimpleOLAP.Interfaces
 {
@@ -14,5 +15,7 @@ namespace NSimpleOLAP.Interfaces
     uint Occurrences { get; }
 
     IValueCollection<T> Values { get; }
+
+    IList<ITrigger<T>> Triggers { get; }
   }
 }

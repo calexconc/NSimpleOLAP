@@ -6,7 +6,9 @@ using NSimpleOLAP.Schema;
 using NSimpleOLAP.Schema.Interfaces;
 using NSimpleOLAP.Storage;
 using NSimpleOLAP.Storage.Interfaces;
+using NSimpleOLAP.Triggers.Interfaces;
 using System;
+using System.Collections.Generic;
 
 namespace NSimpleOLAP
 {
@@ -17,6 +19,7 @@ namespace NSimpleOLAP
     where T : struct, IComparable
   {
     private DataRowHelper<T> _rowHelper;
+    private IList<ITrigger<T>> _triggers;
 
     public Cube()
     {
@@ -106,6 +109,11 @@ namespace NSimpleOLAP
       }
     }
 
+    public void DeRegisterTrigger(ITrigger<T> trigger)
+    {
+      throw new NotImplementedException();
+    }
+
     #endregion props
 
     #region IDisposable implementations
@@ -160,6 +168,11 @@ namespace NSimpleOLAP
       this.ProcessDataSource();
 
       this.IsProcessing = false;
+    }
+
+    public void RegisterTrigger(ITrigger<T> trigger)
+    {
+      throw new NotImplementedException();
     }
 
     #endregion IProcess implementation

@@ -1,4 +1,5 @@
 ﻿using NSimpleOLAP.Interfaces;
+using NSimpleOLAP.Triggers.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -27,5 +28,11 @@ namespace NSimpleOLAP
       get;
       protected set;
     }
+
+    public IList<ITrigger<T>> Triggers
+    {
+      get;
+      private set;
+    } = new List<ITrigger<T>>();
   }
 }

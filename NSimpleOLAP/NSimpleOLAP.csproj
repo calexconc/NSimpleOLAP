@@ -277,6 +277,8 @@
     <Compile Include="Storage\Molap\MolapStorage.cs" />
     <Compile Include="Storage\Molap\MolapValuesCollection.cs" />
     <Compile Include="Storage\StorageFactory.cs" />
+    <Compile Include="Triggers\Interfaces\ITrigger.cs" />
+    <Compile Include="Triggers\Interfaces\ITriggerContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

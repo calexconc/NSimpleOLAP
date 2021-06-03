@@ -4,6 +4,7 @@ using NSimpleOLAP.Data;
 using NSimpleOLAP.Schema;
 using NSimpleOLAP.Schema.Interfaces;
 using NSimpleOLAP.Storage.Interfaces;
+using NSimpleOLAP.Triggers.Interfaces;
 using System;
 
 namespace NSimpleOLAP.Interfaces
@@ -27,5 +28,9 @@ namespace NSimpleOLAP.Interfaces
     string Source { get; set; }
 
     void Initialize();
+
+    void RegisterTrigger(ITrigger<T> trigger);
+
+    void DeRegisterTrigger(ITrigger<T> trigger);
   }
 }

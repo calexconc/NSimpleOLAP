@@ -27,4 +27,8 @@
   public enum TimeLevels { TIME = 0, HOUR = 1, MINUTES = 2, SECONDS = 3 }
 
   public enum LinearSummaries { COLUMN_TOTALS = 0, ROW_TOTALS = 1, COLUMN_BASE_TOTALS = 2, ROW_BASE_TOTALS = 3 }
+
+  public enum TriggerType { Always = 0, ChangeState = 1 }
+
+  public enum TriggerExecutionPlanType { Queue = 0, Priority = 1 }
 }
