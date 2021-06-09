@@ -8,6 +8,7 @@ using NSimpleOLAP.Storage;
 using NSimpleOLAP.Storage.Interfaces;
 using NSimpleOLAP.Triggers.Interfaces;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace NSimpleOLAP
@@ -111,7 +112,10 @@ namespace NSimpleOLAP
 
     public void DeRegisterTrigger(ITrigger<T> trigger)
     {
-      throw new NotImplementedException();
+      if (_triggers.Any(x => x.ID.Equals(trigger.ID)))
+      {
+        _triggers.Remove(trigger);
+      }
     }
 
     #endregion props
@@ -172,7 +176,10 @@ namespace NSimpleOLAP
 
     public void RegisterTrigger(ITrigger<T> trigger)
     {
-      throw new NotImplementedException();
+      if (!_triggers.Any(x => x.ID.Equals(trigger.ID)))
+      {
+        _triggers.Add(trigger);
+      }
     }
 
     #endregion IProcess implementation
@@ -184,6 +191,7 @@ namespace NSimpleOLAP
       this.Name = this.Config.Name;
       this.Source = this.Config.Source.Name;
       this.IsProcessing = false;
+      _triggers = new List<ITrigger<T>>();
     }
 
     private void ProcessDataSource()

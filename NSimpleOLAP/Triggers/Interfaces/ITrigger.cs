@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NSimpleOLAP.Common;
+﻿using NSimpleOLAP.Common;
 using NSimpleOLAP.CubeExpressions.Interfaces;
 using NSimpleOLAP.Interfaces;
+using System;
+using System.Collections.Generic;
 
 namespace NSimpleOLAP.Triggers.Interfaces
 {
   public interface ITrigger<T>
     where T : struct, IComparable
   {
+    T ID { get; }
+
+    KeyValuePair<T, T>[] Binding { get; }
+
     Predicate<IExpressionContext<T, ICell<T>>> Condition { get; }
 
     Action<ITriggerContext<T, ICell<T>>> OnAction { get; }
@@ -21,5 +22,7 @@ namespace NSimpleOLAP.Triggers.Interfaces
     TriggerType TypeOf { get; }
 
     TriggerExecutionPlanType ExecutionPlanType { get; }
+
+    void Execute(ICell<T> cell);
   }
 }

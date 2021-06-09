@@ -1,5 +1,5 @@
 ﻿using NSimpleOLAP.Interfaces;
-using NSimpleOLAP.Triggers.Interfaces;
+using NSimpleOLAP.Triggers;
 using System;
 using System.Collections.Generic;
 
@@ -29,10 +29,6 @@ namespace NSimpleOLAP
       protected set;
     }
 
-    public IList<ITrigger<T>> Triggers
-    {
-      get;
-      private set;
-    } = new List<ITrigger<T>>();
+    public event TriggerExecute<T> Triggered;
   }
 }

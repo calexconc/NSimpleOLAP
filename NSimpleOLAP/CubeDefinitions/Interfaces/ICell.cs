@@ -1,6 +1,6 @@
-﻿using System;
+﻿using NSimpleOLAP.Triggers;
+using System;
 using System.Collections.Generic;
-using NSimpleOLAP.Triggers.Interfaces;
 
 namespace NSimpleOLAP.Interfaces
 {
@@ -16,6 +16,6 @@ namespace NSimpleOLAP.Interfaces
 
     IValueCollection<T> Values { get; }
 
-    IList<ITrigger<T>> Triggers { get; }
+    event TriggerExecute<T> Triggered;
   }
 }

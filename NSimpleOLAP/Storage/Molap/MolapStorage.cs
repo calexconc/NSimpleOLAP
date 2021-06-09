@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NSimpleOLAP.CubeExpressions;
+using NSimpleOLAP.Triggers.Interfaces;
 
 namespace NSimpleOLAP.Storage.Molap
 {
@@ -222,6 +223,16 @@ namespace NSimpleOLAP.Storage.Molap
       }
       else
         throw new Exception("Predicate isn't filterling on facts.");
+    }
+
+    public void RegisterTrigger(ITrigger<T> trigger)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void DeRegisterTrigger(ITrigger<T> trigger)
+    {
+      throw new NotImplementedException();
     }
 
     public StorageType StorageType { get { return StorageType.Molap; } }

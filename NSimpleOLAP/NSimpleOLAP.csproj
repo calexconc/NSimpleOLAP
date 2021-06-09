@@ -279,6 +279,8 @@
     <Compile Include="Storage\StorageFactory.cs" />
     <Compile Include="Triggers\Interfaces\ITrigger.cs" />
     <Compile Include="Triggers\Interfaces\ITriggerContext.cs" />
+    <Compile Include="Triggers\TriggerExecute.cs" />
+    <Compile Include="Triggers\TriggerHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

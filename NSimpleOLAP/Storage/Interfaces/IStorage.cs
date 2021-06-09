@@ -6,6 +6,7 @@ using NSimpleOLAP.Schema;
 using NSimpleOLAP.Schema.Interfaces;
 using System;
 using System.Collections.Generic;
+using NSimpleOLAP.Triggers.Interfaces;
 
 namespace NSimpleOLAP.Storage.Interfaces
 {
@@ -39,6 +40,10 @@ namespace NSimpleOLAP.Storage.Interfaces
     T GetAggregationId(KeyValuePair<T, T>[] axisPairs, IPredicate<T> predicateRoot);
 
     void PopulateNewAggregation(T key, IPredicate<T> predicateRoot);
+
+    void RegisterTrigger(ITrigger<T> trigger);
+
+    void DeRegisterTrigger(ITrigger<T> trigger);
 
     StorageType StorageType { get; }
     INamespace<T> NameSpace { get; }
