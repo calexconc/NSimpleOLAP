@@ -44,7 +44,7 @@ namespace NSimpleOLAP.Storage.Molap
     {
       var key = _keyHandler.GetKey(pairs);
 
-      _aggregationGraphs.Add(key, new Graph<T, U>(key, _config, _cellValuesHelper, predicateKey));
+      _aggregationGraphs.Add(key, new Graph<T, U>(key, _config, _cellValuesHelper, null, predicateKey));
 
       return key;
     }

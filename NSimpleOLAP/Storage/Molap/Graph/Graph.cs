@@ -4,6 +4,7 @@ using NSimpleOLAP.Data;
 using NSimpleOLAP.Interfaces;
 using System;
 using System.Collections.Generic;
+using NSimpleOLAP.Triggers;
 
 namespace NSimpleOLAP.Storage.Molap.Graph
 {
@@ -20,17 +21,19 @@ namespace NSimpleOLAP.Storage.Molap.Graph
     private MolapCellValuesHelper<T, U> _cellValueHelper;
     private int _predicateKey;
     private AllKeyComparer<T> _allKeyComparer;
+    private TriggerHelper<T, U> _triggerHelper;
 
-    public Graph(T root, StorageConfig config, MolapCellValuesHelper<T, U> cellValueHelper)
+    public Graph(T root, StorageConfig config, MolapCellValuesHelper<T, U> cellValueHelper, TriggerHelper<T, U> triggerHelper)
     {
       this.Root = new ImpNode(new KeyValuePair<T, T>[] { new KeyValuePair<T, T>(default(T), root) }) { IsRootDim = true };
       _cellValueHelper = cellValueHelper;
+      _triggerHelper = triggerHelper;
       _keyHandler = new MolapKeyHandler<T>(config.MolapConfig);
       this.Root.Key = _keyHandler.GetKey(this.Root.Coords);
       _allKeyComparer = new AllKeyComparer<T>();
     }
 
-    public Graph(T root, StorageConfig config, MolapCellValuesHelper<T, U> cellValueHelper, int predicateKey) : this(root, config, cellValueHelper)
+    public Graph(T root, StorageConfig config, MolapCellValuesHelper<T, U> cellValueHelper, TriggerHelper<T, U> triggerHelper, int predicateKey) : this(root, config, cellValueHelper, triggerHelper)
     {
       _predicateKey = predicateKey;
     }
@@ -110,8 +113,6 @@ namespace NSimpleOLAP.Storage.Molap.Graph
 
       if (selectorList.Length > 0)
       {
-        var ncoords = new KeyValuePair<T, T>[] { };
-
         foreach (var item in TravelNodes(this.Root, coords, 0, selectors, 0))
           yield return item;
       }
@@ -313,6 +314,10 @@ namespace NSimpleOLAP.Storage.Molap.Graph
       KeyValuePair<T, T>[] coords = Node<T, U>.GetCoords(rootnode.Coords, pair);
       T hashkey = _keyHandler.GetKey(coords);
       Node<T, U> rnode = rootnode.InsertChildNodeIfNotExists(hashkey, coords);
+
+      if (_triggerHelper != null)
+        _triggerHelper.TryRegisterActiveTriggers(rnode.Container);
+
       var context = new GraphCellContext<T>(rnode.Container, rootnode.Container);
       _cellValueHelper.UpdateMeasures(rnode.Container, vardata, context);
       _cellValueHelper.UpdateMetrics(rnode.Container, context);

@@ -138,7 +138,7 @@ namespace NSimpleOLAP
 
     public void Initialize()
     {
-      this.Storage = StorageFactory<T, Cell<T>>.Create(this.Key, this.Config.Storage);
+      this.Storage = StorageFactory<T, Cell<T>>.Create(this.Key, this.Config.Storage, _triggers);
       this.NameSpace = Storage.NameSpace;
       this.DataSources = new DataSourceCollection(this.Config);
       this.Cells = new CellCollection<T>(this.Storage);

@@ -8,24 +8,26 @@ using NSimpleOLAP.Common;
 using NSimpleOLAP.Configuration;
 using NSimpleOLAP.Data.Readers;
 using NSimpleOLAP.Schema;
+using NSimpleOLAP.Interfaces;
 using NSimpleOLAP.Triggers.Interfaces;
+using NSimpleOLAP.Storage.Molap.Graph;
 
 
 namespace NSimpleOLAP.Triggers
 {
-  internal class TriggerHelper<T>
+  internal class TriggerHelper<T, U>
     where T : struct, IComparable
+    where U : class, ICell<T>
   {
-    private DataSchema<T> _schema;
-    private CubeSourceConfig _config;
 
-    public TriggerHelper(DataSchema<T> schema, CubeSourceConfig config)
+    private IList<ITrigger<T>> _triggers;
+
+    public TriggerHelper(IList<ITrigger<T>> triggers)
     {
-      _schema = schema;
-      _config = config;
+      _triggers = triggers;
     }
 
-    public void TryRegister(ITrigger<T> trigger, Cell<T> cell)
+    public void TryRegister(ITrigger<T> trigger, U cell)
     {
       if (CanBind(trigger.Binding, cell.Coords))
       {
@@ -33,12 +35,45 @@ namespace NSimpleOLAP.Triggers
       }
     }
 
-    public void TryDeRegister(ITrigger<T> trigger, Cell<T> cell)
+    public void TryDeRegister(ITrigger<T> trigger, U cell)
     {
       if (CanBind(trigger.Binding, cell.Coords))
       {
         cell.Triggered -= trigger.Execute;
       }
+    }
+
+    public void TryRegister(ITrigger<T> trigger, Graph<T, U> globalGraph)
+    {
+      var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = 3 };
+
+      Parallel.ForEach(globalGraph.NodesEnumerator(), parallelOptions, 
+        x => {
+          TryRegister(trigger, x.Container);
+        });
+    }
+
+    public void TryDeRegister(ITrigger<T> trigger, Graph<T, U> globalGraph)
+    {
+      var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = 3 };
+
+      Parallel.ForEach(globalGraph.NodesEnumerator(), parallelOptions,
+        x => {
+          TryDeRegister(trigger, x.Container);
+        });
+    }
+
+    public void TryRegisterActiveTriggers(U cell)
+    {
+      if (_triggers == null)
+        return;
+
+      var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = 3 };
+
+      Parallel.ForEach(_triggers, parallelOptions,
+        x => {
+          TryDeRegister(x, cell);
+        });
     }
 
     private bool CanBind(KeyValuePair<T,T>[] trigger, KeyValuePair<T, T>[] coords)

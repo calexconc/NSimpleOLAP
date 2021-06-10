@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using NSimpleOLAP.CubeExpressions;
 using NSimpleOLAP.Triggers.Interfaces;
+using NSimpleOLAP.Triggers;
 
 namespace NSimpleOLAP.Storage.Molap
 {
@@ -25,18 +26,20 @@ namespace NSimpleOLAP.Storage.Molap
     where U : class, ICell<T>
   {
     private Graph<T, U> _globalGraph;
+    private TriggerHelper<T, U> _triggerHelper;
     private T _cubeid;
     private CanonicFormater<T> _canonicFormater;
     private IFactsProviderCache<T, FactsRow<T>> _factsCache;
     private MolapCellValuesHelper<T, U> _cellValuesHelper;
     private MolapAggregationsStorage<T, U> _onDemandAggregations;
 
-    public MolapStorage(T cubeid, StorageConfig config)
+    public MolapStorage(T cubeid, StorageConfig config, IList<ITrigger<T>> triggers)
     {
       _cubeid = cubeid;
       this.Config = config;
       _canonicFormater = new CanonicFormater<T>();
       _factsCache = new InMemoryFactsProvider<T>(this.Config.MolapConfig.HashType);
+      _triggerHelper = new TriggerHelper<T, U>(triggers);
 
       this.Init();
     }
@@ -87,7 +90,7 @@ namespace NSimpleOLAP.Storage.Molap
         (storage) => this.NameSpace.Clear(ItemType.Metric));
 
       _cellValuesHelper = new CellValuesHelper(this.Measures, this.Dimensions, this.Metrics);
-      _globalGraph = new Graph<T, U>(_cubeid, this.Config, _cellValuesHelper);
+      _globalGraph = new Graph<T, U>(_cubeid, this.Config, _cellValuesHelper, _triggerHelper);
       _onDemandAggregations = new MolapAggregationsStorage<T, U>(_cubeid, this.Config, _cellValuesHelper, _canonicFormater);
     }
 
@@ -171,7 +174,7 @@ namespace NSimpleOLAP.Storage.Molap
       _factsCache.Clear();
       _onDemandAggregations.Clear();
       var oldGraph = _globalGraph;
-      _globalGraph = new Graph<T, U>(_cubeid, this.Config, _cellValuesHelper);
+      _globalGraph = new Graph<T, U>(_cubeid, this.Config, _cellValuesHelper, _triggerHelper);
       oldGraph.Dispose();
     }
 
@@ -227,12 +230,14 @@ namespace NSimpleOLAP.Storage.Molap
 
     public void RegisterTrigger(ITrigger<T> trigger)
     {
-      throw new NotImplementedException();
+      if (_triggerHelper != null)
+        _triggerHelper.TryRegister(trigger, _globalGraph);
     }
 
     public void DeRegisterTrigger(ITrigger<T> trigger)
     {
-      throw new NotImplementedException();
+      if (_triggerHelper != null)
+        _triggerHelper.TryDeRegister(trigger, _globalGraph);
     }
 
     public StorageType StorageType { get { return StorageType.Molap; } }
