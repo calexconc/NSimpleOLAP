@@ -30,5 +30,13 @@ namespace NSimpleOLAP
     }
 
     public event TriggerExecute<T> Triggered;
+
+    public void Trigger()
+    {
+      if (Triggered != null)
+      {
+        Triggered(this);
+      }
+    }
   }
 }

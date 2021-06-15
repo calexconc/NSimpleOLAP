@@ -127,6 +127,7 @@ namespace NSimpleOLAP.Query.Molap
       return ocell;
     }
 
+    /*
     private IOutputCell<T> Map(Cell<T> cell, KeyValuePair<T, T>[] coords, KeyValuePair<T,T>[] xTuples, KeyValuePair<T, T>[] yTuples, Query<T> query)
     {
       var ocell = new OutputCell<T>(coords, xTuples, yTuples);
@@ -140,7 +141,7 @@ namespace NSimpleOLAP.Query.Molap
       }
 
       return ocell;
-    }
+    }*/
 
     private IOutputCell<T> Map(Cell<T> cell, KeyValuePair<T, T>[] coords, KeyValuePair<T, T>[] xTuples, KeyValuePair<T, T>[] yTuples, Query<T> query, OutputCellType cellType)
     {

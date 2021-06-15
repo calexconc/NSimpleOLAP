@@ -322,6 +322,8 @@ namespace NSimpleOLAP.Storage.Molap.Graph
       _cellValueHelper.UpdateMeasures(rnode.Container, vardata, context);
       _cellValueHelper.UpdateMetrics(rnode.Container, context);
 
+      rnode.Container.Trigger();
+
       return rnode;
     }
 

@@ -17,5 +17,7 @@ namespace NSimpleOLAP.Interfaces
     IValueCollection<T> Values { get; }
 
     event TriggerExecute<T> Triggered;
+
+    void Trigger();
   }
 }
