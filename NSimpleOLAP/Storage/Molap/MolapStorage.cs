@@ -230,7 +230,7 @@ namespace NSimpleOLAP.Storage.Molap
 
     public void RegisterTrigger(ITrigger<T> trigger)
     {
-      if (_triggerHelper != null)
+      if (_triggerHelper != null) // change this
         _triggerHelper.TryRegister(trigger, _globalGraph);
     }
 
@@ -238,6 +238,12 @@ namespace NSimpleOLAP.Storage.Molap
     {
       if (_triggerHelper != null)
         _triggerHelper.TryDeRegister(trigger, _globalGraph);
+    }
+
+    public void RunQueuedTriggers()
+    {
+      if (_triggerHelper != null)
+        _triggerHelper.ServiceQueue();
     }
 
     public StorageType StorageType { get { return StorageType.Molap; } }

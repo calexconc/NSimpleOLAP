@@ -45,6 +45,8 @@ namespace NSimpleOLAP.Storage.Interfaces
 
     void DeRegisterTrigger(ITrigger<T> trigger);
 
+    void RunQueuedTriggers();
+
     StorageType StorageType { get; }
     INamespace<T> NameSpace { get; }
     IMemberStorage<T, Dimension<T>> Dimensions { get; }

@@ -204,6 +204,8 @@ namespace NSimpleOLAP
             _rowHelper.GetMeasureData(reader.Current));
         }
       }
+
+      Storage.RunQueuedTriggers();
     }
 
     #endregion private methods

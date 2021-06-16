@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,12 +25,14 @@ namespace NSimpleOLAP.Triggers
     private IList<ITrigger<T>> _triggers;
     private AllKeysComparer<T> _allKeysComparer;
     private KeyComparer<T> _keyComparer;
+    private ConcurrentQueue<ITriggerContext<T, U>> _queue;
 
     public TriggerHelper(IList<ITrigger<T>> triggers)
     {
       _triggers = triggers;
       _allKeysComparer = new AllKeysComparer<T>();
       _keyComparer = new KeyComparer<T>();
+      _queue = new ConcurrentQueue<ITriggerContext<T, U>>();
     }
 
     public void TryRegister(ITrigger<T> trigger, U cell)
@@ -79,6 +82,45 @@ namespace NSimpleOLAP.Triggers
         x => {
           TryDeRegister(x, cell);
         });
+    }
+
+    public void DropAllTriggers(Graph<T, U> globalGraph)
+    {
+      foreach (var trigger in _triggers)
+        TryDeRegister(trigger, globalGraph);
+    }
+
+    public void Queue(ITriggerContext<T, U> context)
+    {
+      if (!_queue.Contains(context)) // use different equality comparer
+      {
+        _queue.Enqueue(context);
+      }
+    }
+
+    public void ServiceQueue()
+    {
+      if (_queue.Count > 0)
+      {
+        var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = 3 };
+
+        Parallel.ForEach(DeQueue(), parallelOptions, x => ExecuteTrigger(x));
+      }
+    }
+
+    private IEnumerable<ITriggerContext<T, U>> DeQueue()
+    {
+      ITriggerContext<T, U> context = null;
+
+      while (_queue.TryDequeue(out context))
+      {
+        yield return context;
+      }
+    }
+
+    private void ExecuteTrigger(ITriggerContext<T, U> context)
+    {
+      // to do
     }
 
     private bool CanBind(KeyValuePair<T,T>[] trigger, KeyValuePair<T, T>[] coords)

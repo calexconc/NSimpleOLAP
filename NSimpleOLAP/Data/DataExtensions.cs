@@ -27,6 +27,8 @@ namespace NSimpleOLAP.Data
 
         cube.Storage.AddRowData(cube.RowHelper.GetDimensions(row),
             cube.RowHelper.GetMeasureData(row));
+
+        cube.Storage.RunQueuedTriggers();
       }
       else
       {
@@ -53,6 +55,8 @@ namespace NSimpleOLAP.Data
 
         cube.Storage.AddRowData(cube.RowHelper.GetDimensions(row),
             cube.RowHelper.GetMeasureData(row));
+
+        cube.Storage.RunQueuedTriggers();
       }
     }
 
@@ -70,6 +74,8 @@ namespace NSimpleOLAP.Data
 
       cube.Storage.AddRowData(cube.RowHelper.GetDimensions(row),
           cube.RowHelper.GetMeasureData(row));
+
+      cube.Storage.RunQueuedTriggers();
     }
 
     public static void AppendData<T>(this Cube<T> cube, IEnumerable<object[]> rows)
@@ -88,6 +94,8 @@ namespace NSimpleOLAP.Data
         cube.Storage.AddRowData(cube.RowHelper.GetDimensions(row),
             cube.RowHelper.GetMeasureData(row));
       }
+
+      cube.Storage.RunQueuedTriggers();
     }
 
     public static void AppendData<T>(this Cube<T> cube, params KeyValuePair<string, object>[] values)
@@ -104,6 +112,8 @@ namespace NSimpleOLAP.Data
 
       cube.Storage.AddRowData(cube.RowHelper.GetDimensions(row),
           cube.RowHelper.GetMeasureData(row));
+
+      cube.Storage.RunQueuedTriggers();
     }
 
     public static void AppendData<T>(this Cube<T> cube, IEnumerable<KeyValuePair<string, object>[]> rows)
@@ -122,6 +132,8 @@ namespace NSimpleOLAP.Data
         cube.Storage.AddRowData(cube.RowHelper.GetDimensions(row),
             cube.RowHelper.GetMeasureData(row));
       }
+
+      cube.Storage.RunQueuedTriggers();
     }
 
     private static object[] GetValues(DataSourceConfig config, string[] strs)
