@@ -25,9 +25,9 @@ builder.MetaData(mbuild =>
 {
   mbuild.AddMetric("teste1", metricBuilder =>
   {
-	metricBuilder
-	  .SetType(typeof(int))
-	  .SetExpression("quantity + 10");
+    metricBuilder
+      .SetType(typeof(int))
+      .SetExpression("quantity + 10");
   });
 });
 
@@ -44,8 +44,12 @@ cube.BuildMetrics()
 
 ### Metrics Text Expressions
 
+Adding metrics through text expressions is the easiest way to define triggers, and is the only way that is possible to add triggers at configuration time.
+
 
 #### Parser Limitations
+
+The parser will allow for basic arithmetic operations, like sum, subtraction, division and multiplication. And it's possible to callout measures and use predefined functions.
 
 #### Available Functions To Use in Metrics
 
@@ -62,5 +66,10 @@ Exp | Exponential value, aggregated or not, for a cell | EXP quantity
 ### Navigating the Schema for Metrics
 
 ```csharp
+
+foreach (var metric in cube.Schema.Metrics)
+{
+  System.Console.WriteLine(metric.Name);
+}
 
 ```
