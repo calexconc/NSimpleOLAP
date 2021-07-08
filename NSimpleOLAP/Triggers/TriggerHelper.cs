@@ -110,9 +110,7 @@ namespace NSimpleOLAP.Triggers
 
     private IEnumerable<ITriggerContext<T, U>> DeQueue()
     {
-      ITriggerContext<T, U> context = null;
-
-      while (_queue.TryDequeue(out context))
+      while (_queue.TryDequeue(out var context))
       {
         yield return context;
       }
@@ -120,7 +118,7 @@ namespace NSimpleOLAP.Triggers
 
     private void ExecuteTrigger(ITriggerContext<T, U> context)
     {
-      // to do
+      context.ExecuteHandle(context);
     }
 
     private bool CanBind(KeyValuePair<T,T>[] trigger, KeyValuePair<T, T>[] coords)

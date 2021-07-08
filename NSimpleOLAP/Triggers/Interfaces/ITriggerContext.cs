@@ -14,5 +14,7 @@ namespace NSimpleOLAP.Triggers.Interfaces
     U CurrentCell { get; }
 
     U RootCell { get; }
+
+    Action<ITriggerContext<T, U>> ExecuteHandle { get; }
   }
 }
