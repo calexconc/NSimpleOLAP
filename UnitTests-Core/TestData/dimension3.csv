@@ -1,0 +1,7 @@
+﻿id, description, idcountry, country, idregion, region
+1, Lisbon, 1, Portugal, 1, Europe
+2, New York, 2, USA, 2, North America
+3, Paris, 3, France, 1, Europe
+4, Munich, 4, Germany, 1, Europe
+5, Berlin, 4, Germany, 1, Europe
+6, London, 5, UK, 1, Europe

@@ -1,0 +1,341 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{DA5630EE-AF68-4E65-8A7F-4E68C6ABE155}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NSimpleOLAP</RootNamespace>
+    <AssemblyName>NSimpleOLAP</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ItemGroup>
+    <Compile Include="Common\AbsIdentityKey.cs" />
+    <Compile Include="Common\BadTupleReferenceException.cs" />
+    <Compile Include="Common\CanonicFormater.cs" />
+    <Compile Include="Common\Collections\TSDictionary.cs" />
+    <Compile Include="Common\Collections\TSList.cs" />
+    <Compile Include="Common\Converters\TimeLevelListFieldConverter.cs" />
+    <Compile Include="Common\DataSourceException.cs" />
+    <Compile Include="Common\Enums.cs" />
+    <Compile Include="Common\GuidIdentityKey.cs" />
+    <Compile Include="Common\Hashing\CityHash.cs" />
+    <Compile Include="Common\Hashing\FNV1aHasher.cs" />
+    <Compile Include="Common\Hashing\FNVHasher.cs" />
+    <Compile Include="Common\Hashing\Hasher.cs" />
+    <Compile Include="Common\Hashing\UInt128.cs" />
+    <Compile Include="Common\Interfaces\IProcess.cs" />
+    <Compile Include="Common\IntIdentityKey.cs" />
+    <Compile Include="Common\Hashing\KeyStreamer.cs" />
+    <Compile Include="Common\Hashing\MurmurHash2.cs" />
+    <Compile Include="Common\KeyEqualityComparer.cs" />
+    <Compile Include="Common\ReservedAndSpecialValues.cs" />
+    <Compile Include="Common\Utils\DateAndTimeExtensions.cs" />
+    <Compile Include="Common\Utils\DateTimeMemberGenerator.cs" />
+    <Compile Include="Common\Utils\MetricsReferenceTranslator.cs" />
+    <Compile Include="Common\Utils\NamespaceResolver.cs" />
+    <Compile Include="Common\Converters\DateLevelListFieldConverter.cs" />
+    <Compile Include="Configuration\CSVConfig.cs" />
+    <Compile Include="Configuration\CubeElementCollection.cs" />
+    <Compile Include="Configuration\CubeSourceElement.cs" />
+    <Compile Include="Configuration\DataTableConfigElement.cs" />
+    <Compile Include="Configuration\DBConfigElement.cs" />
+    <Compile Include="Configuration\DefaultCubeConfiguration.cs" />
+    <Compile Include="Configuration\Extensions\ConfigExtensions.cs" />
+    <Compile Include="Configuration\Fluent\CSVConfigBuilder.cs" />
+    <Compile Include="Configuration\Fluent\CubeSourceBuilder.cs" />
+    <Compile Include="Configuration\Fluent\DataTableConfigBuilder.cs" />
+    <Compile Include="Configuration\Fluent\DBConfigBuilder.cs" />
+    <Compile Include="Configuration\Fluent\FluentExtensions.cs" />
+    <Compile Include="Configuration\Fluent\MolapStorageBuilder.cs" />
+    <Compile Include="Configuration\Fluent\ObjectMapperConfigBuilder.cs" />
+    <Compile Include="Configuration\Fluent\TransformerConfigBuilder.cs" />
+    <Compile Include="Configuration\MolapStorageConfig.cs" />
+    <Compile Include="Configuration\ObjectMapperConfigElement.cs" />
+    <Compile Include="Configuration\OlapConfigSectionSettings.cs" />
+    <Compile Include="Configuration\CubeConfig.cs" />
+    <Compile Include="Configuration\DataSourceConfig.cs" />
+    <Compile Include="Configuration\DataSourceConfigCollection.cs" />
+    <Compile Include="Configuration\DimensionConfig.cs" />
+    <Compile Include="Configuration\DimensionConfigCollection.cs" />
+    <Compile Include="Configuration\FieldConfigCollection.cs" />
+    <Compile Include="Configuration\FieldConfig.cs" />
+    <Compile Include="Configuration\Fluent\CubeBuilder.cs" />
+    <Compile Include="Configuration\Fluent\DataSourceBuilder.cs" />
+    <Compile Include="Configuration\Fluent\DimensionBuilder.cs" />
+    <Compile Include="Configuration\Fluent\MeasureBuilder.cs" />
+    <Compile Include="Configuration\Fluent\MetaDataBuilder.cs" />
+    <Compile Include="Configuration\Fluent\MetricBuilder.cs" />
+    <Compile Include="Configuration\Fluent\StorageConfigBuilder.cs" />
+    <Compile Include="Configuration\MeasureConfigCollection.cs" />
+    <Compile Include="Configuration\MeasureConfig.cs" />
+    <Compile Include="Configuration\MetaDataConfig.cs" />
+    <Compile Include="Configuration\MetricConfigCollection.cs" />
+    <Compile Include="Configuration\MetricConfig.cs" />
+    <Compile Include="Configuration\SourceMappingsCollection.cs" />
+    <Compile Include="Configuration\SourceMappingsElement.cs" />
+    <Compile Include="Configuration\StorageConfig.cs" />
+    <Compile Include="Configuration\TransformerConfigElement.cs" />
+    <Compile Include="Configuration\TransformerItemCollectionConfig.cs" />
+    <Compile Include="Configuration\TransformerItemConfig.cs" />
+    <Compile Include="CubeDefinitions\Cell.cs" />
+    <Compile Include="CubeDefinitions\CellCollection.cs" />
+    <Compile Include="CubeDefinitions\Cube.cs" />
+    <Compile Include="CubeDefinitions\CubeSet.cs" />
+    <Compile Include="CubeDefinitions\Interfaces\ICell.cs" />
+    <Compile Include="CubeDefinitions\Interfaces\ICellCollection.cs" />
+    <Compile Include="CubeDefinitions\Interfaces\ICube.cs" />
+    <Compile Include="CubeDefinitions\Interfaces\IValueCollection.cs" />
+    <Compile Include="CubeExpressions\Builder\MetricCubeExpressionBuilder.cs" />
+    <Compile Include="CubeExpressions\Builder\ExpressionBuilder.cs" />
+    <Compile Include="CubeExpressions\Builder\ExpressionElementPickerBuilder.cs" />
+    <Compile Include="CubeExpressions\Builder\ExpressionElementsBuilder.cs" />
+    <Compile Include="CubeExpressions\Builder\ExpressionNodeBuilder.cs" />
+    <Compile Include="CubeExpressions\Builder\ExpressionUnitFactory.cs" />
+    <Compile Include="CubeExpressions\Builder\MetricExpressionBuilder.cs" />
+    <Compile Include="CubeExpressions\CellContext.cs" />
+    <Compile Include="CubeExpressions\CubeExpressionHelperFunctions.cs" />
+    <Compile Include="CubeExpressions\CubeMetricsExtensions.cs" />
+    <Compile Include="CubeExpressions\ExpressionPartDefinition.cs" />
+    <Compile Include="CubeExpressions\Interfaces\IExpression.cs" />
+    <Compile Include="CubeExpressions\Interfaces\IExpressionContext.cs" />
+    <Compile Include="CubeExpressions\MetricsExpression.cs" />
+    <Compile Include="Data\DataExtensions.cs" />
+    <Compile Include="Data\DataRowHelper.cs" />
+    <Compile Include="Data\DataSourceCollection.cs" />
+    <Compile Include="Data\DefaultDataSource.cs" />
+    <Compile Include="Data\Interfaces\IDataSource.cs" />
+    <Compile Include="Data\Interfaces\IDataTransformer.cs" />
+    <Compile Include="Data\Interfaces\Output\IColumn.cs" />
+    <Compile Include="Data\Interfaces\Output\IColumnStack.cs" />
+    <Compile Include="Data\Interfaces\Output\IRow.cs" />
+    <Compile Include="Data\Interfaces\Output\IRowBranch.cs" />
+    <Compile Include="Data\Interfaces\Output\IRowCaption.cs" />
+    <Compile Include="Data\Interfaces\Output\IRowCell.cs" />
+    <Compile Include="Data\MeasureValuesCollection.cs" />
+    <Compile Include="Data\OutputExtensions.cs" />
+    <Compile Include="Data\Output\Column.cs" />
+    <Compile Include="Data\Output\ColumnStack.cs" />
+    <Compile Include="Data\Output\Enums.cs" />
+    <Compile Include="Data\Interfaces\Output\ITable.cs" />
+    <Compile Include="Data\Output\Row.cs" />
+    <Compile Include="Data\Output\RowCaption.cs" />
+    <Compile Include="Data\Output\Table.cs" />
+    <Compile Include="Data\Providers\DBFactory.cs" />
+    <Compile Include="Data\Readers\AbsReader.cs" />
+    <Compile Include="Data\Readers\AbsRowData.cs" />
+    <Compile Include="Data\Readers\CSVReader.cs" />
+    <Compile Include="Data\Readers\DTableReader.cs" />
+    <Compile Include="Data\Readers\DBReader.cs" />
+    <Compile Include="Data\Readers\ObjectMapperReader.cs" />
+    <Compile Include="Data\Readers\TransformerReader.cs" />
+    <Compile Include="Data\Transformers\MemberIntervalTransformer.cs" />
+    <Compile Include="Parsers\Collections\BinaryNode.cs" />
+    <Compile Include="Parsers\Collections\BinaryTree.cs" />
+    <Compile Include="Parsers\MetricsExpressionComposer.cs" />
+    <Compile Include="Parsers\ParseException.cs" />
+    <Compile Include="Parsers\ParserExtensions.cs" />
+    <Compile Include="Parsers\QueryWhereExpressionComposer.cs" />
+    <Compile Include="Parsers\Tokens\BoolToken.cs" />
+    <Compile Include="Parsers\Tokens\ConstantToken.cs" />
+    <Compile Include="Parsers\Tokens\EndParToken.cs" />
+    <Compile Include="Parsers\Tokens\EofToken.cs" />
+    <Compile Include="Parsers\Tokens\NumToken.cs" />
+    <Compile Include="Parsers\Tokens\OperatorToken.cs" />
+    <Compile Include="Parsers\Tokens\ParToken.cs" />
+    <Compile Include="Parsers\Tokens\StartParToken.cs" />
+    <Compile Include="Parsers\Tokens\SubToken.cs" />
+    <Compile Include="Parsers\Tokens\Token.cs" />
+    <Compile Include="Parsers\Tokens\Tokenizer.cs" />
+    <Compile Include="Parsers\TokenTree.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Query\Builder\AndPredicateBuilder.cs" />
+    <Compile Include="Query\Axis.cs" />
+    <Compile Include="Query\Builder\AxisBuilder.cs" />
+    <Compile Include="Query\Builder\BlockPredicateBuilder.cs" />
+    <Compile Include="Query\Builder\DimensionSlicerBuilder.cs" />
+    <Compile Include="Query\Builder\PredicateBuilderExtensions.cs" />
+    <Compile Include="Query\Interfaces\IOutputCell.cs" />
+    <Compile Include="Query\Interfaces\IQuery.cs" />
+    <Compile Include="Query\Interfaces\IQueryOrchestrator.cs" />
+    <Compile Include="Query\Interfaces\IPredicate.cs" />
+    <Compile Include="Query\Interfaces\IPredicateBuilder.cs" />
+    <Compile Include="Common\KeyTuplePairs.cs" />
+    <Compile Include="Query\Layout\OutputCell.cs" />
+    <Compile Include="Common\Utils\MeasureReferenceTranslator.cs" />
+    <Compile Include="Query\Builder\MeasureSlicerBuilder.cs" />
+    <Compile Include="Query\Molap\MolapQueryOrchestrator.cs" />
+    <Compile Include="Query\Builder\NotPredicateBuilder.cs" />
+    <Compile Include="Query\Builder\OrPredicateBuilder.cs" />
+    <Compile Include="Query\Predicates\NullPredicate.cs" />
+    <Compile Include="Query\Predicates\PredicateFactory.cs" />
+    <Compile Include="Query\Predicates\AndPredicate.cs" />
+    <Compile Include="Query\Predicates\BlockPredicate.cs" />
+    <Compile Include="Query\Predicates\NotPredicate.cs" />
+    <Compile Include="Query\Predicates\OrPredicate.cs" />
+    <Compile Include="Query\Predicates\PredicateHelperFunctions.cs" />
+    <Compile Include="Query\Predicates\SliceByDimensionMembers.cs" />
+    <Compile Include="Query\Predicates\SliceByMeasure.cs" />
+    <Compile Include="Query\Query.cs" />
+    <Compile Include="Query\Builder\QueryBuilder.cs" />
+    <Compile Include="Query\QueryExtensions.cs" />
+    <Compile Include="Common\Utils\DimensionReferenceTranslator.cs" />
+    <Compile Include="Query\Builder\WhereBuilder.cs" />
+    <Compile Include="Renderers\ConsoleRenderer.cs" />
+    <Compile Include="Renderers\RenderingExtensions.cs" />
+    <Compile Include="Renderers\TableRenderer.cs" />
+    <Compile Include="Schema\BaseDataMemberCollection.cs" />
+    <Compile Include="Schema\DataSchema.cs" />
+    <Compile Include="Schema\Dimension.cs" />
+    <Compile Include="Schema\DimensionCollection.cs" />
+    <Compile Include="Schema\DimensionDate.cs" />
+    <Compile Include="Schema\DimensionLevel.cs" />
+    <Compile Include="Schema\DimensionTime.cs" />
+    <Compile Include="Schema\Interfaces\IDataItem.cs" />
+    <Compile Include="Schema\Interfaces\IDataItemCollection.cs" />
+    <Compile Include="Schema\Interfaces\IDimension.cs" />
+    <Compile Include="Schema\Interfaces\IMeasure.cs" />
+    <Compile Include="Schema\Interfaces\IMember.cs" />
+    <Compile Include="Schema\Interfaces\IMetric.cs" />
+    <Compile Include="Schema\Interfaces\INamespace.cs" />
+    <Compile Include="Schema\Measure.cs" />
+    <Compile Include="Schema\MeasuresCollection.cs" />
+    <Compile Include="Schema\Member.cs" />
+    <Compile Include="Schema\MemberCollection.cs" />
+    <Compile Include="Schema\MemberDateTimeCollection.cs" />
+    <Compile Include="Schema\Metric.cs" />
+    <Compile Include="Schema\MetricsCollection.cs" />
+    <Compile Include="Storage\FactsCache\FactsRow.cs" />
+    <Compile Include="Storage\FactsCache\InMemoryFactsProvider.cs" />
+    <Compile Include="Storage\Interfaces\IFactRow.cs" />
+    <Compile Include="Storage\Interfaces\IFactsProviderCache.cs" />
+    <Compile Include="Storage\Interfaces\IMemberStorage.cs" />
+    <Compile Include="Storage\Interfaces\IStorage.cs" />
+    <Compile Include="Storage\Interfaces\IVarData.cs" />
+    <Compile Include="Storage\Molap\AbsMolapMemberCollection.cs" />
+    <Compile Include="Storage\Molap\AbsMolapNameSpace.cs" />
+    <Compile Include="Storage\Molap\Graph\Graph.cs" />
+    <Compile Include="Storage\Molap\Graph\GraphCellContext.cs" />
+    <Compile Include="Storage\Molap\Graph\Node.cs" />
+    <Compile Include="Storage\Molap\Graph\NodeCollection.cs" />
+    <Compile Include="Storage\Molap\MolapAggregationsStorage.cs" />
+    <Compile Include="Storage\Molap\MolapCell.cs" />
+    <Compile Include="Storage\Molap\MolapCellValuesHelper.cs" />
+    <Compile Include="Storage\Molap\MolapKeyHandler.cs" />
+    <Compile Include="Storage\Molap\MolapStorage.cs" />
+    <Compile Include="Storage\Molap\MolapValuesCollection.cs" />
+    <Compile Include="Storage\StorageFactory.cs" />
+    <Compile Include="Triggers\Builder\PreConditionBuilder.cs" />
+    <Compile Include="Triggers\Builder\TriggerBuilder.cs" />
+    <Compile Include="Triggers\Interfaces\ITrigger.cs" />
+    <Compile Include="Triggers\Interfaces\ITriggerContext.cs" />
+    <Compile Include="Triggers\Molap\AbstractMolapTrigger.cs" />
+    <Compile Include="Triggers\Molap\DifferentialExecutionTrigger.cs" />
+    <Compile Include="Triggers\Molap\LinearExecutionTrigger.cs" />
+    <Compile Include="Triggers\TriggerExecute.cs" />
+    <Compile Include="Triggers\TriggerHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="license.txt" />
+  </ItemGroup>
+</Project>

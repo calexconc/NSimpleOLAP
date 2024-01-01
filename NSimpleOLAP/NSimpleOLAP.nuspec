@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>NSimpleOLAP</id>
+	<title>NSimpleOLAP</title>
+    <version>0.5.5</version>
+    <authors>Carlos Conceicao</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <license type="expression">Apache-2.0</license>
+    <projectUrl>https://github.com/calexconc/NSimpleOLAP</projectUrl>
+    <description>.Net Native In-Memory Olap Engine</description>
+    <releaseNotes>Alpha version</releaseNotes>
+    <tags>OLAP</tags>
+    <repository url="https://github.com/calexconc/NSimpleOLAP" />
+  </metadata>
+</package>
